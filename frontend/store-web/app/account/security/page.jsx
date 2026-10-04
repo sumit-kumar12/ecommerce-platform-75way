@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { apiRequest } from "../../../lib/api";
 
 export default function SecuritySettingsPage() {
@@ -10,7 +10,21 @@ export default function SecuritySettingsPage() {
     confirmPassword: ""
   });
   const [updatingPassword, setUpdatingPassword] = useState(false);
-  const [is2FAEnabled, setIs2FAEnabled] = useState(true);
+  const [passwordMessage, setPasswordMessage] = useState(null);
+  
+  const [sessions, setSessions] = useState([]);
+  const [loadingSessions, setLoadingSessions] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    apiRequest("/users/me/sessions")
+      .then(res => {
+        if (active && res.sessions) setSessions(res.sessions);
+      })
+      .catch(console.error)
+      .finally(() => { if (active) setLoadingSessions(false); });
+    return () => { active = false; };
+  }, []);
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
@@ -19,8 +33,9 @@ export default function SecuritySettingsPage() {
 
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
+    setPasswordMessage(null);
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      alert("New passwords do not match.");
+      setPasswordMessage({ type: "error", text: "New passwords do not match." });
       return;
     }
     setUpdatingPassword(true);
@@ -30,24 +45,27 @@ export default function SecuritySettingsPage() {
         body: {
           currentPassword: passwordForm.currentPassword,
           newPassword: passwordForm.newPassword
-        }
+        },
+        csrf: true
       });
-      alert("Password updated successfully!");
+      setPasswordMessage({ type: "success", text: "Password updated successfully!" });
       setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
     } catch (err) {
       console.error("Failed to update password", err);
-      // Fallback alert for mocked preview flow if api fails
-      alert("Password update requested");
+      setPasswordMessage({ type: "error", text: err.message || "Failed to update password" });
     } finally {
       setUpdatingPassword(false);
     }
   };
 
-  const loginActivities = [
-    { id: 1, location: "Noida, India", date: "May 26, 2024 - 10:30 AM", current: true },
-    { id: 2, location: "Delhi, India", date: "May 20, 2024 - 08:45 PM", current: false },
-    { id: 3, location: "Mumbai, India", date: "May 17, 2024 - 04:12 PM", current: false },
-  ];
+  const handleRevokeSession = async (sessionId) => {
+    try {
+      await apiRequest(`/users/me/sessions/${sessionId}`, { method: "DELETE", csrf: true });
+      setSessions(prev => prev.filter(s => s.id !== sessionId));
+    } catch (err) {
+      console.error("Failed to revoke session", err);
+    }
+  };
 
   return (
     <div className="animate-in fade-in duration-500 max-w-2xl mx-auto xl:mx-0">
@@ -65,6 +83,13 @@ export default function SecuritySettingsPage() {
           {/* Change Password Section */}
           <section>
             <h2 className="text-lg font-bold text-white mb-5">Change Password</h2>
+            
+            {passwordMessage && (
+              <div className={`p-3 rounded-xl mb-5 text-sm font-medium ${passwordMessage.type === 'success' ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border border-red-500/20 text-red-400'}`}>
+                {passwordMessage.text}
+              </div>
+            )}
+
             <form onSubmit={handleUpdatePassword} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-1.5">Current Password</label>
@@ -114,73 +139,49 @@ export default function SecuritySettingsPage() {
 
           <hr className="border-[#2d2c45]" />
 
-          {/* Two-Factor Authentication */}
-          <section>
-            <h2 className="text-lg font-bold text-white mb-2">Two-Factor Authentication</h2>
-            <p className="text-sm text-slate-400 mb-5">Add an extra layer of security to your account.</p>
-            
-            <div className="bg-[#1a192b] border border-[#2d2c45] rounded-xl p-5 mb-5 flex items-center justify-between">
-              <div>
-                <span className="text-sm font-medium text-slate-300">Status</span>
-              </div>
-              <div className="flex items-center gap-3">
-                {is2FAEnabled ? (
-                  <span className="text-emerald-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    Enabled
-                  </span>
-                ) : (
-                  <span className="text-rose-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-rose-400"></span>
-                    Disabled
-                  </span>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setIs2FAEnabled(!is2FAEnabled)}
-                  className={`w-11 h-6 rounded-full relative transition-colors ${is2FAEnabled ? 'bg-[#8C63F5]' : 'bg-[#2d2c45]'}`}
-                >
-                  <span className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${is2FAEnabled ? 'right-1' : 'left-1'}`} />
-                </button>
-              </div>
-            </div>
-
-            <button className="w-full bg-[#8C63F5]/10 hover:bg-[#8C63F5]/20 text-[#8C63F5] border border-[#8C63F5]/30 font-bold py-3 px-4 rounded-xl transition-colors">
-              Manage 2FA
-            </button>
-          </section>
-
-          <hr className="border-[#2d2c45]" />
-
           {/* Login Activity */}
           <section>
             <h2 className="text-lg font-bold text-white mb-2">Login Activity</h2>
-            <p className="text-sm text-slate-400 mb-5">Last 3 login activities on your account.</p>
+            <p className="text-sm text-slate-400 mb-5">Active sessions on your account.</p>
 
-            <div className="space-y-4">
-              {loginActivities.map((activity) => (
-                <div key={activity.id} className="flex items-center justify-between p-4 bg-[#1a192b] border border-[#2d2c45] rounded-xl">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-[#2d2c45] flex items-center justify-center shrink-0">
-                      <span className="material-symbols-outlined text-slate-400 text-[20px]">
-                        {activity.location.includes("India") ? "public" : "devices"}
-                      </span>
+            {loadingSessions ? (
+              <div className="flex justify-center p-4"><div className="w-6 h-6 border-2 border-[#8B5CF6] border-t-transparent rounded-full animate-spin"></div></div>
+            ) : (
+              <div className="space-y-4">
+                {sessions.map((session) => (
+                  <div key={session.id} className="flex items-center justify-between p-4 bg-[#1a192b] border border-[#2d2c45] rounded-xl flex-wrap gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-[#2d2c45] flex items-center justify-center shrink-0">
+                        <span className="material-symbols-outlined text-slate-400 text-[20px]">
+                          devices
+                        </span>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                          IP: {session.ip}
+                        </h4>
+                        <p className="text-xs text-slate-400 mt-1">Last Active: {new Date(session.updatedAt).toLocaleString()}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                        {activity.location}
-                      </h4>
-                      <p className="text-xs text-slate-400 mt-1">{activity.date}</p>
+                    <div className="flex items-center gap-3">
+                      {session.isCurrentSession && (
+                        <span className="text-emerald-400 text-xs font-medium bg-emerald-400/10 px-2 py-1 rounded">
+                          This Device
+                        </span>
+                      )}
+                      {!session.isCurrentSession && (
+                        <button onClick={() => handleRevokeSession(session.id)} className="text-xs text-red-400 hover:text-red-300 font-medium px-3 py-1 bg-red-400/10 rounded transition-colors">
+                          Revoke
+                        </button>
+                      )}
                     </div>
                   </div>
-                  {activity.current && (
-                    <span className="text-emerald-400 text-xs font-medium bg-emerald-400/10 px-2 py-1 rounded">
-                      This Device
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
+                ))}
+                {sessions.length === 0 && (
+                  <div className="text-sm text-slate-400">No active sessions found.</div>
+                )}
+              </div>
+            )}
           </section>
 
         </div>

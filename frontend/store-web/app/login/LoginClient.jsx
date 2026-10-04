@@ -19,6 +19,7 @@ export default function LoginClient({ registered, reset }) {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showInstagramSoon, setShowInstagramSoon] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const isRegister = pathname.includes("register");
 
@@ -43,7 +44,8 @@ export default function LoginClient({ registered, reset }) {
   }, [searchParams]);
 
   const statusMessage = useMemo(() => {
-    if (registered === "1") return "Registration complete. Sign in to start your secure session.";
+    if (registered === "1") return "Registration complete. Please check your email for the verification link.";
+    if (searchParams.get("verified") === "1") return "Email verified successfully! You can now log in.";
     if (reset === "success") return "Password updated. Sign in with your new credentials.";
     if (searchParams.get("expired") === "1") return "Session expired. Please re-verify your credentials to continue.";
     return "";
@@ -65,7 +67,7 @@ export default function LoginClient({ registered, reset }) {
       } else {
         await apiRequest("/auth/login", {
           method: "POST",
-          body: { email, password },
+          body: { email, password, rememberMe },
           csrf: true,
         });
         router.push(nextPath);
@@ -197,7 +199,7 @@ export default function LoginClient({ registered, reset }) {
 
           {!isRegister && (
             <div className="flex items-center">
-              <input type="checkbox" id="remember" className="w-5 h-5 rounded border-white/30 bg-[#111] text-[#8B5CF6] focus:ring-[#8B5CF6] focus:ring-offset-[#1A1A2E]" />
+              <input type="checkbox" id="remember" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} className="w-5 h-5 rounded border-white/30 bg-[#111] text-[#8B5CF6] focus:ring-[#8B5CF6] focus:ring-offset-[#1A1A2E]" />
               <label htmlFor="remember" className="ml-2 block text-sm text-gray-400">Remember me</label>
             </div>
           )}

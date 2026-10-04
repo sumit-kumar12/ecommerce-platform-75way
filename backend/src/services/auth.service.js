@@ -78,8 +78,13 @@ export const registerUser = async ({ email, password, name, phone }) => {
       passwordHash,
       name,
       phone,
+      isEmailVerified: false,
     },
   });
+
+  const verifyToken = randomToken(32);
+  await redis.set(`email-verify:${verifyToken}`, user.email, "EX", 86400); // 24 hours
+  console.log(`\n\n[MOCK EMAIL] Verification link for ${user.email}: http://localhost:3000/verify-email?token=${verifyToken}\n\n`);
 
   loggers.security.info({
     eventType: "registration_success",
@@ -189,6 +194,7 @@ export const loginUser = async ({ req, email, password, deviceId }) => {
 
   assertAccountNotLocked(user);
   if (!user.isActive) throw new AppError("Account is inactive.", 403, "ACCOUNT_INACTIVE");
+  if (!user.isEmailVerified) throw new AppError("Please verify your email before logging in.", 403, "EMAIL_NOT_VERIFIED");
 
   if (!user.passwordHash) {
     throw new AppError("Please login with Google/Instagram or reset your password.", 401, "OAUTH_USER_NO_PASSWORD");
@@ -634,4 +640,13 @@ export const loginWithOAuth = async ({ req, email, name, provider, providerId, d
     accessTokenExpiresAt: accessIssue.expiresAt,
     refreshToken: refreshIssue.refreshToken,
   };
+};
+export const verifyEmail = async (token) => {
+  const email = await redis.get(`email-verify:${token}`);
+  if (!email) throw new AppError("Invalid or expired verification link.", 400, "VERIFY_TOKEN_INVALID");
+  await prisma.user.update({
+    where: { email },
+    data: { isEmailVerified: true },
+  });
+  await redis.del(`email-verify:${token}`);
 };

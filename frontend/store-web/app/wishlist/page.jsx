@@ -12,6 +12,9 @@ export default function WishlistPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [actionMessage, setActionMessage] = useState(null);
+  const [addingToCart, setAddingToCart] = useState(false);
+
   useEffect(() => {
     let active = true;
     apiRequest("/wishlist")
@@ -31,10 +34,57 @@ export default function WishlistPage() {
       console.error(e);
     }
   };
+  
+  const showMessage = (text, type = "success") => {
+    setActionMessage({ text, type });
+    setTimeout(() => setActionMessage(null), 3000);
+  };
 
-  const handleAddAllToCart = () => {
-    // Implement bulk add to cart logic here
-    console.log("Add all to cart clicked");
+  const handleAddToCart = async (product) => {
+    setAddingToCart(true);
+    try {
+      const variantId = product.variants?.[0]?.id;
+      if (!variantId) throw new Error("Product variant not found");
+      await apiRequest("/cart/items", {
+        method: "POST",
+        body: { variantId, quantity: 1 },
+        csrf: true
+      });
+      showMessage("Added to cart");
+    } catch (err) {
+      console.error(err);
+      showMessage("Failed to add to cart", "error");
+    } finally {
+      setAddingToCart(false);
+    }
+  };
+
+  const handleAddAllToCart = async () => {
+    if (products.length === 0) return;
+    setAddingToCart(true);
+    try {
+      let successCount = 0;
+      for (const p of products) {
+        const variantId = p.variants?.[0]?.id;
+        if (variantId) {
+          try {
+             await apiRequest("/cart/items", {
+              method: "POST",
+              body: { variantId, quantity: 1 },
+              csrf: true
+            });
+            successCount++;
+          } catch(e) {
+            console.error(e);
+          }
+        }
+      }
+      showMessage(`Added ${successCount} items to cart`);
+    } catch (err) {
+      showMessage("Failed to add items to cart", "error");
+    } finally {
+      setAddingToCart(false);
+    }
   };
 
   return (
@@ -48,12 +98,20 @@ export default function WishlistPage() {
             <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
               My Wishlist <span className="bg-white/10 text-sm font-medium px-3 py-1 rounded-full">{products.length}</span>
             </h1>
-            <button 
-              onClick={handleAddAllToCart}
-              className="bg-[#8B5CF6] hover:bg-[#7C3AED] text-white px-6 py-2.5 rounded-full font-bold transition-colors flex items-center justify-center gap-2 text-sm w-full md:w-auto shadow-[0_0_20px_rgba(139,92,246,0.3)]"
-            >
-              Add All To Cart
-            </button>
+            <div className="flex items-center gap-4">
+              {actionMessage && (
+                <span className={`text-sm font-bold ${actionMessage.type === 'error' ? 'text-red-400' : 'text-emerald-400'}`}>
+                  {actionMessage.text}
+                </span>
+              )}
+              <button 
+                onClick={handleAddAllToCart}
+                disabled={addingToCart || products.length === 0}
+                className="bg-[#8B5CF6] hover:bg-[#7C3AED] text-white px-6 py-2.5 rounded-full font-bold transition-colors flex items-center justify-center gap-2 text-sm w-full md:w-auto shadow-[0_0_20px_rgba(139,92,246,0.3)] disabled:opacity-50"
+              >
+                {addingToCart ? "Adding..." : "Add All To Cart"}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -128,7 +186,7 @@ export default function WishlistPage() {
                         )}
                       </div>
                       
-                      <button className="w-full bg-[#1A1A2E] text-[#8B5CF6] border border-[#8B5CF6] py-2.5 rounded-lg font-semibold hover:bg-[#8B5CF6] hover:text-white transition-colors flex items-center justify-center gap-2 text-sm">
+                      <button onClick={() => handleAddToCart(p)} disabled={addingToCart} className="w-full bg-[#1A1A2E] text-[#8B5CF6] border border-[#8B5CF6] py-2.5 rounded-lg font-semibold hover:bg-[#8B5CF6] hover:text-white transition-colors flex items-center justify-center gap-2 text-sm disabled:opacity-50">
                         Add to Cart
                       </button>
                     </div>

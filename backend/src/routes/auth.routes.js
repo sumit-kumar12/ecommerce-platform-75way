@@ -14,6 +14,7 @@ import {
   googleOAuthCallbackController,
   instagramOAuthInitController,
   instagramOAuthCallbackController,
+  verifyEmailController,
 } from "../controllers/auth.controller.js";
 import { forgotPasswordRateLimiter } from "../middlewares/rate-limit.middleware.js";
 
@@ -21,6 +22,7 @@ const router = Router();
 
 router.get("/csrf-token", asyncHandler(csrfTokenController));
 router.post("/register", asyncHandler(registerController));
+router.post("/verify-email", asyncHandler(verifyEmailController));
 router.post("/login", asyncHandler(loginController));
 router.post("/refresh", asyncHandler(refreshController));
 router.post("/logout", asyncHandler(logoutController));

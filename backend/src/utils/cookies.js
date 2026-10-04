@@ -20,10 +20,13 @@ export const accessCookieOptions = () => ({
   maxAge: 10 * 60 * 1000,
 });
 
-export const refreshCookieOptions = () => ({
-  ...commonCookieOptions,
-  maxAge: env.JWT_REFRESH_TTL_DAYS * 24 * 60 * 60 * 1000,
-});
+export const refreshCookieOptions = (rememberMe = true) => {
+  const opts = { ...commonCookieOptions };
+  if (rememberMe) {
+    opts.maxAge = env.JWT_REFRESH_TTL_DAYS * 24 * 60 * 60 * 1000;
+  }
+  return opts;
+};
 
 export const guestCookieOptions = () => ({
   ...commonCookieOptions,

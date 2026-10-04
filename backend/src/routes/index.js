@@ -26,11 +26,14 @@ const router = Router();
 // Publicly available auth and health checks
 import clientErrorsRoutes from "./client-errors.routes.js";
 import eventsRoutes from "./events.routes.js";
+import contactRoutes from "./contact.routes.js";
+
 router.use("/auth", authRoutes);
 router.use("/client-errors", clientErrorsRoutes);
 router.use("/events", eventsRoutes);
 router.use("/monitoring", monitoringRoutes);
 router.use("/payments", paymentWebhookRoutes);
+router.use("/contact", contactRoutes);
 
 // Apply lockout guard to the rest of the store routes
 router.use(lockoutGuardMiddleware);

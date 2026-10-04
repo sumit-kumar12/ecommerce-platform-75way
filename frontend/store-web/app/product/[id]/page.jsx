@@ -288,15 +288,24 @@ export default function ProductDetailPage() {
               <div>
                 <h1 className="text-3xl font-bold text-white mb-1">{product.name}</h1>
                 <p className="text-gray-400 text-sm mb-4">{product.shortDescription || product.description?.slice(0, 50) || "True Wireless Earbuds"}</p>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="flex items-center gap-1 bg-[#1A1A2E] border border-white/10 px-2 py-1 rounded-md text-sm">
+                <div className="flex flex-wrap items-center gap-3 mb-6">
+                  <div className="flex items-center gap-1 bg-[#1A1A2E] border border-white/10 px-2 py-1 rounded-md text-sm cursor-pointer" onClick={() => document.getElementById('reviews-section')?.scrollIntoView({behavior: 'smooth'})}>
                     <span className="material-symbols-outlined text-[#FBBF24] text-[16px]">star</span>
-                    <strong className="text-white">4.4</strong>
-                    <span className="text-gray-400">(2,145 reviews)</span>
+                    <strong className="text-white">{reviews.length > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : "0.0"}</strong>
+                    <span className="text-gray-400">({reviews.length} reviews)</span>
                   </div>
+                  <button 
+                    onClick={() => {
+                      document.getElementById('reviews-section')?.scrollIntoView({behavior: 'smooth'});
+                      setShowReviewForm(true);
+                    }} 
+                    className="text-sm font-medium text-[#8B5CF6] hover:text-white transition-colors underline underline-offset-2"
+                  >
+                      Write a Review
+                  </button>
                   <div className="flex items-center gap-1 bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 px-2 py-1 rounded-md text-sm text-[#8B5CF6]">
                     <span className="material-symbols-outlined text-[16px]">emoji_events</span>
-                    <strong>#1 Best Seller</strong> in Earbuds
+                    <strong>#1 Best Seller</strong> in {product.category?.name || "Category"}
                   </div>
                 </div>
               </div>
@@ -522,7 +531,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Customer Reviews Full Width */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
+          <div id="reviews-section" className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
               <div>
                 <h2 className="text-2xl font-bold text-white mb-2">Customer Reviews</h2>

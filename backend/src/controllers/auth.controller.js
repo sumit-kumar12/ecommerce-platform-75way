@@ -22,6 +22,7 @@ import {
   requestPasswordReset,
   resetPasswordWithToken,
   validatePasswordResetToken,
+  verifyEmail,
 } from "../services/auth.service.js";
 import { issueCsrfCookie } from "../middlewares/csrf.middleware.js";
 import { verifyAccessToken } from "../services/token.service.js";
@@ -46,6 +47,7 @@ const registerSchema = z.object({
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(12).max(128),
+  rememberMe: z.boolean().optional().default(false),
 });
 
 const forgotPasswordSchema = z.object({
@@ -96,7 +98,7 @@ export const loginController = async (req, res) => {
   });
 
   res.cookie(env.ACCESS_COOKIE_NAME, session.accessToken, accessCookieOptions());
-  res.cookie(env.REFRESH_COOKIE_NAME, session.refreshToken, refreshCookieOptions());
+  res.cookie(env.REFRESH_COOKIE_NAME, session.refreshToken, refreshCookieOptions(input.rememberMe));
   
   await mergeGuestCartIntoUser(req, session.user.id);
   await mergeGuestWishlistIntoUser(req, session.user.id);
@@ -269,7 +271,7 @@ export const googleOAuthCallbackController = async (req, res) => {
     res.redirect(`${env.FRONTEND_URL || "http://localhost:3000"}`);
   } catch (err) {
     console.error("Google OAuth error:", err);
-    let errorParam = "oauth_failed"; if (err.errorCode === "ACCOUNT_EXISTS_DIFFERENT_PROVIDER") { errorParam = "account_exists"; } res.redirect(`${env.FRONTEND_URL || "http://localhost:3000"}/login?error=${errorParam}&details=${encodeURIComponent(err.message)}`);
+    let errorParam = "oauth_failed"; if (err.code === "ACCOUNT_EXISTS_DIFFERENT_PROVIDER") { errorParam = "account_exists"; } res.redirect(`${env.FRONTEND_URL || "http://localhost:3000"}/login?error=${errorParam}&details=${encodeURIComponent(err.message)}`);
   }
 };
 
@@ -329,6 +331,12 @@ export const instagramOAuthCallbackController = async (req, res) => {
     res.redirect(`${env.FRONTEND_URL || "http://localhost:3000"}`);
   } catch (err) {
     console.error("Instagram OAuth error:", err);
-    let errorParam = "oauth_failed"; if (err.errorCode === "ACCOUNT_EXISTS_DIFFERENT_PROVIDER") { errorParam = "account_exists"; } res.redirect(`${env.FRONTEND_URL || "http://localhost:3000"}/login?error=${errorParam}&details=${encodeURIComponent(err.message)}`);
+    let errorParam = "oauth_failed"; if (err.code === "ACCOUNT_EXISTS_DIFFERENT_PROVIDER") { errorParam = "account_exists"; } res.redirect(`${env.FRONTEND_URL || "http://localhost:3000"}/login?error=${errorParam}&details=${encodeURIComponent(err.message)}`);
   }
+};
+export const verifyEmailController = async (req, res) => {
+  const { token } = req.body;
+  if (!token) throw new AppError("Token is required.", 400, "MISSING_TOKEN");
+  await verifyEmail(token);
+  res.status(200).json({ success: true, message: "Email verified successfully." });
 };

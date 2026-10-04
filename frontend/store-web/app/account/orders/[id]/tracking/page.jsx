@@ -43,22 +43,38 @@ export default function OrderTrackingPage() {
     );
   }
 
-  const statusLevels = { "PENDING": 1, "PROCESSING": 2, "SHIPPED": 3, "DELIVERED": 4, "CANCELLED": -1 };
+  const statusLevels = {
+    "PENDING_PAYMENT": 0,
+    "PAID": 1,
+    "PROCESSING": 2,
+    "SHIPPED": 3,
+    "DELIVERED": 4,
+    "CANCELLED": -1,
+    "REFUNDED": -1,
+    "RETURNED": -1
+  };
   const currentLevel = statusLevels[order.status] || 0;
 
-  const mockDateStr = new Date(order.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  const mockTimeStr = "10:30 AM"; // simplified for mockup
+  const formatDate = (date) => new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const formatTime = (date) => new Date(date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+  const orderDate = order.createdAt ? new Date(order.createdAt) : new Date();
+  const updateDate = order.updatedAt ? new Date(order.updatedAt) : orderDate;
+  
+  // Estimate delivery 5 days after creation
+  const estDelivery = new Date(orderDate);
+  estDelivery.setDate(estDelivery.getDate() + 5);
 
   const carrier = order.shippingCarrier || "Courier";
   const trackingNum = order.trackingNumber || "Awaiting tracking info";
-  const shippedDetails = currentLevel >= 3 ? `${mockDateStr} • 06:00 PM\n${carrier} - ${trackingNum}` : "Pending";
+  const shippedDetails = currentLevel >= 3 ? `${formatDate(updateDate)} • ${formatTime(updateDate)}\n${carrier} - ${trackingNum}` : "Pending";
 
   const steps = [
-    { title: "Order Placed", time: `${mockDateStr} • ${mockTimeStr}`, completed: currentLevel >= 1 },
-    { title: "Confirmed", time: `${mockDateStr} • 11:15 AM`, completed: currentLevel >= 2 },
-    { title: "Packed", time: `${mockDateStr} • 03:30 PM`, completed: currentLevel >= 2 },
+    { title: "Order Placed", time: `${formatDate(orderDate)} • ${formatTime(orderDate)}`, completed: currentLevel >= 0 && currentLevel !== -1 },
+    { title: "Confirmed / Paid", time: currentLevel >= 1 ? `${formatDate(order.paidAt || updateDate)}` : "Pending", completed: currentLevel >= 1 },
+    { title: "Packed", time: currentLevel >= 2 ? `${formatDate(updateDate)}` : "Pending", completed: currentLevel >= 2 },
     { title: "Shipped", time: shippedDetails, completed: currentLevel >= 3 },
-    { title: "Delivered", time: currentLevel >= 4 ? `${mockDateStr}` : "Pending", completed: currentLevel >= 4 }
+    { title: "Delivered", time: currentLevel >= 4 ? `${formatDate(updateDate)}` : "Pending", completed: currentLevel >= 4 }
   ];
 
   return (
@@ -74,7 +90,7 @@ export default function OrderTrackingPage() {
           <div className="text-sm mb-6">
             <p className="text-gray-400">Estimated Delivery</p>
             <p className="text-green-400 font-medium text-base mt-1">
-              {currentLevel === 4 ? "Delivered on" : "Delivered by"} May 29, 2024
+              {currentLevel === 4 ? "Delivered on" : "Delivered by"} {formatDate(currentLevel === 4 ? updateDate : estDelivery)}
             </p>
           </div>
 

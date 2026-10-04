@@ -3,20 +3,37 @@
 import React, { useState } from 'react';
 import { StoreShell } from "../../../components/layout/StoreShell";
 
+import { apiRequest } from "../../../lib/api";
+
 export default function ContactSupportPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showToast, setShowToast] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate network request
-    setTimeout(() => {
-      setIsSubmitting(false);
+    const formData = new FormData(e.target);
+    const payload = {
+      subject: formData.get("subject") || "general",
+      orderId: formData.get("orderId") || "",
+      message: formData.get("message") || ""
+    };
+    
+    try {
+      await apiRequest("/contact", {
+        method: "POST",
+        body: payload,
+        csrf: true
+      });
       setShowToast(true);
       e.target.reset();
       setTimeout(() => setShowToast(false), 3000);
-    }, 1000);
+    } catch (err) {
+      console.error("Failed to send message", err);
+      alert("Failed to send message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -121,7 +138,7 @@ export default function ContactSupportPage() {
                 <div>
                   <label className="block text-sm font-bold text-slate-300 mb-2">Subject</label>
                   <div className="relative">
-                    <select required className="w-full bg-[#0F0E17] border border-[#2d2c45] focus:border-[#8C63F5] rounded-xl px-4 py-3 text-white appearance-none outline-none transition-colors">
+                    <select required name="subject" className="w-full bg-[#0F0E17] border border-[#2d2c45] focus:border-[#8C63F5] rounded-xl px-4 py-3 text-white appearance-none outline-none transition-colors">
                       <option value="">Select a subject</option>
                       <option value="order">Order Issue</option>
                       <option value="refund">Refund/Return</option>
@@ -137,6 +154,7 @@ export default function ContactSupportPage() {
                   <label className="block text-sm font-bold text-slate-300 mb-2">Order ID <span className="text-slate-500 font-normal">(Optional)</span></label>
                   <input 
                     type="text" 
+                    name="orderId"
                     placeholder="e.g. ORD-123456"
                     className="w-full bg-[#0F0E17] border border-[#2d2c45] focus:border-[#8C63F5] rounded-xl px-4 py-3 text-white outline-none transition-colors placeholder-slate-600"
                   />
@@ -146,6 +164,7 @@ export default function ContactSupportPage() {
                   <label className="block text-sm font-bold text-slate-300 mb-2">Message</label>
                   <textarea 
                     required
+                    name="message"
                     rows="5"
                     placeholder="Type your message here..."
                     className="w-full bg-[#0F0E17] border border-[#2d2c45] focus:border-[#8C63F5] rounded-xl px-4 py-3 text-white outline-none transition-colors placeholder-slate-600 resize-none"
