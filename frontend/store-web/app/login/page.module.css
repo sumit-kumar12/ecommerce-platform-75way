@@ -1,0 +1,122 @@
+.inlineLink {
+  color: #9fb2ff;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.inlineLink:hover {
+  color: #c7d2fe;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  background: rgba(16, 185, 129, 0.1);
+  color: #6ee7b7;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.heroBadge :global(.material-symbols-outlined) {
+  font-size: 1rem;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.successBanner,
+.notice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 0.75rem;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+}
+
+.successBanner {
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  background: rgba(16, 185, 129, 0.1);
+  color: #d1fae5;
+  font-size: 0.88rem;
+}
+
+.successBanner :global(.material-symbols-outlined) {
+  font-size: 1.1rem;
+}
+
+.passwordBlock {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.passwordHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: #cbd5e1;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.notice {
+  border: 1px solid rgba(245, 158, 11, 0.18);
+  background: rgba(245, 158, 11, 0.08);
+  color: #fde68a;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.notice p {
+  margin: 0;
+}
+
+.notice :global(.material-symbols-outlined) {
+  font-size: 1.1rem;
+}
+
+.mfaRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.mfaRow input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #8B5CF6;
+}
+
+.submitButton {
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.footerCopy {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .passwordHeading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+

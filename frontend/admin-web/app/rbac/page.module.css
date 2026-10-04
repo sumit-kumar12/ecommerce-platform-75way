@@ -1,0 +1,25 @@
+.pageRoot {
+  --primary: #8B5CF6;
+  --background-light: #f6f6f8;
+  --background-dark: #0F0E17;
+  --surface-dark: #1d1c33;
+  --border-dark: #2d2b4f;
+}
+
+.permissionGrid {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) repeat(3, minmax(96px, 0.35fr));
+}
+
+.customScrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.customScrollbar::-webkit-scrollbar-track {
+  background: var(--surface-dark);
+}
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+

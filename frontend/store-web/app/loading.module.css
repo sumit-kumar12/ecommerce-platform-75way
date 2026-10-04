@@ -1,0 +1,492 @@
+.shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(139, 92, 246, 0.14), transparent 42%),
+    #0F0E17;
+  color: #f8fafc;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.9rem 2rem;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(18px);
+}
+
+.headerLeft,
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brandMark,
+.avatar,
+.activityIcon,
+.chartAction,
+.productAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background: rgba(139, 92, 246, 0.2);
+  color: #8B5CF6;
+}
+
+.brandMark {
+  width: 2rem;
+  height: 2rem;
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.navSkeletons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 1rem;
+}
+
+.navItem,
+.search,
+.sidebarTitle,
+.filterLabel,
+.filterLine,
+.filterChip,
+.title,
+.subtitle,
+.sortLabel,
+.sortControl,
+.metricLabel,
+.metricValue,
+.metricDelta,
+.chartTitle,
+.activityTitle,
+.activityLineLong,
+.activityLineShort,
+.productCategory,
+.productTitle,
+.productMeta,
+.productPrice {
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.08), rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.08));
+  background-size: 220% 100%;
+  animation: shimmer 1.7s ease-in-out infinite;
+}
+
+.navItem {
+  width: 4.75rem;
+  height: 0.9rem;
+}
+
+.search {
+  width: 16rem;
+  height: 2.5rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  background-color: rgba(139, 92, 246, 0.08);
+}
+
+.avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.sidebar {
+  display: none;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+}
+
+.sidebarTitle {
+  width: 6rem;
+  height: 1rem;
+}
+
+.filterBlock {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.filterLabel {
+  width: 5rem;
+  height: 0.85rem;
+}
+
+.filterLine {
+  width: 100%;
+  height: 0.8rem;
+}
+
+.filterChip {
+  width: 6.5rem;
+  height: 1.6rem;
+}
+
+.main {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.titleRow {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(14px);
+}
+
+.titleBlock {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.title {
+  width: min(18rem, 70%);
+  height: 2.4rem;
+  border-radius: 0.75rem;
+}
+
+.subtitle {
+  width: min(14rem, 45%);
+  height: 0.9rem;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.sortLabel {
+  width: 3.5rem;
+  height: 0.85rem;
+}
+
+.sortControl {
+  width: 10rem;
+  height: 2.8rem;
+  border-radius: 0.9rem;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.metricCard,
+.chartCard,
+.activityCard,
+.productCard {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(18px);
+}
+
+.metricCard {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.metricGlow {
+  position: absolute;
+  inset: 0;
+  background: rgba(139, 92, 246, 0.06);
+  animation: pulseGlass 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.metricLabel,
+.metricValue,
+.metricDelta,
+.chartTitle,
+.activityTitle,
+.productCategory,
+.productTitle,
+.productMeta,
+.productPrice {
+  position: relative;
+  z-index: 1;
+}
+
+.metricLabel {
+  width: 6rem;
+  height: 0.9rem;
+}
+
+.metricValue {
+  width: 7rem;
+  height: 2rem;
+  border-radius: 0.65rem;
+}
+
+.metricValueShort {
+  width: 5rem;
+}
+
+.metricDelta {
+  width: 4rem;
+  height: 0.9rem;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.14), rgba(16, 185, 129, 0.28), rgba(16, 185, 129, 0.14));
+}
+
+.analytics {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.chartCard {
+  min-height: 22rem;
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.chartTitle {
+  width: 10rem;
+  height: 1rem;
+}
+
+.chartActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chartAction {
+  width: 2rem;
+  height: 2rem;
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.chartBars {
+  min-height: 16rem;
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  align-items: end;
+  gap: 0.55rem;
+}
+
+.chartBar {
+  border-radius: 0.65rem 0.65rem 0 0;
+  background: linear-gradient(180deg, rgba(139, 92, 246, 0.34), rgba(139, 92, 246, 0.1));
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.bar40 { height: 40%; }
+.bar60 { height: 60%; }
+.bar35 { height: 35%; }
+.bar75 { height: 75%; }
+.bar55 { height: 55%; }
+.bar90 { height: 90%; }
+.bar45 { height: 45%; }
+.bar30 { height: 30%; }
+.bar65 { height: 65%; }
+.bar80 { height: 80%; }
+
+.activityCard {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.activityTitle {
+  width: 8rem;
+  height: 1rem;
+}
+
+.activityList {
+  display: grid;
+  gap: 1rem;
+}
+
+.activityItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.activityIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.8rem;
+  background: rgba(139, 92, 246, 0.12);
+}
+
+.activityLines {
+  flex: 1;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.activityLineLong {
+  width: 100%;
+  height: 0.75rem;
+}
+
+.activityLineShort {
+  width: 45%;
+  height: 0.5rem;
+  opacity: 0.55;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.productCard {
+  display: grid;
+  min-height: 22rem;
+}
+
+.productMedia {
+  min-height: 13rem;
+  background: linear-gradient(180deg, rgba(139, 92, 246, 0.18), rgba(139, 92, 246, 0.06));
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+.productBody {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1.25rem;
+}
+
+.productCategory {
+  width: 5rem;
+  height: 0.8rem;
+}
+
+.productTitle {
+  width: 75%;
+  height: 1.6rem;
+  border-radius: 0.6rem;
+}
+
+.productMeta {
+  width: 40%;
+  height: 0.85rem;
+}
+
+.productFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.productPrice {
+  width: 5rem;
+  height: 1.5rem;
+  border-radius: 0.6rem;
+}
+
+.productAction {
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.2);
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@keyframes pulseGlass {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.25; }
+}
+
+@media (min-width: 1100px) {
+  .body {
+    grid-template-columns: 13rem minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .sidebar {
+    display: flex;
+    position: sticky;
+    top: 6rem;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .analytics {
+    grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr);
+  }
+
+  .productGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .titleRow {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 860px) {
+  .header {
+    padding: 0.85rem 1rem;
+    flex-wrap: wrap;
+  }
+
+  .navSkeletons {
+    display: none;
+  }
+
+  .search {
+    width: 100%;
+    min-width: 12rem;
+  }
+
+  .body {
+    padding: 1rem;
+  }
+}
+

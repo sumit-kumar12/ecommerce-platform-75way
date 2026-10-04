@@ -1,0 +1,631 @@
+.page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.topBar,
+.sideCard,
+.dangerCard,
+.metricCard,
+.logPanel,
+.chartCard,
+.mapCard,
+.trapTableCard,
+.message {
+  border-radius: 1.25rem;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: rgba(10, 10, 15, 0.85);
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+}
+
+.brandBlock {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.brandIcon {
+  color: #8B5CF6;
+}
+
+.brandIcon :global(.material-symbols-outlined) {
+  font-size: 2rem;
+}
+
+.brandBlock h1 {
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.brandBlock h1 span {
+  color: #8B5CF6;
+}
+
+.liveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.2rem;
+  color: #10b981;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.liveDot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #10b981;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.iconButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: rgba(139, 92, 246, 0.1);
+  color: #8b83ff;
+  cursor: pointer;
+}
+
+.alertDot {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: #ef4444;
+}
+
+.adminBlock {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.adminBlock p,
+.adminBlock small,
+.message,
+.dangerCard p,
+.emptyCopy,
+.commandRow div span {
+  margin: 0;
+  color: #9aa8c3;
+}
+
+.adminBlock p {
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.adminBlock small {
+  font-size: 0.62rem;
+}
+
+.avatar {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  border: 2px solid rgba(139, 92, 246, 0.4);
+  background: radial-gradient(circle at 30% 30%, #7c74ff, #1f2937);
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 0.95rem;
+  border-color: rgba(96, 165, 250, 0.24);
+  background: rgba(29, 78, 216, 0.16);
+  color: #bfdbfe;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.78fr) minmax(0, 2fr);
+  gap: 1rem;
+}
+
+.sidebar,
+.mainColumn,
+.metricGrid,
+.bottomGrid,
+.statList,
+.targetList,
+.deployForm,
+.trapTable {
+  display: grid;
+  gap: 1rem;
+}
+
+.sideCard,
+.dangerCard,
+.metricCard,
+.chartCard,
+.mapCard,
+.trapTableCard {
+  padding: 1.1rem;
+}
+
+.sideCard h2,
+.dangerCard h2,
+.cardHead h3 {
+  margin: 0;
+  color: #8b83ff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.statList div,
+.targetItem,
+.geoStats div,
+.trapRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.statList span,
+.targetItem span,
+.geoStats span,
+.deployForm label span {
+  color: #9aa8c3;
+  font-size: 0.78rem;
+}
+
+.statList strong,
+.targetItem strong,
+.dangerCard strong,
+.metricCard strong,
+.trapRow strong {
+  color: #fff;
+}
+
+.inlineTrack {
+  width: 100%;
+  height: 0.35rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.12);
+}
+
+.inlineTrack span {
+  display: block;
+  height: 100%;
+  background: #8B5CF6;
+}
+
+.targetItem {
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.targetItem span {
+  color: #ef4444;
+  font-family: Consolas, "Courier New", monospace;
+}
+
+.dangerCard {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.dangerHead {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.4rem;
+}
+
+.dangerHead :global(.material-symbols-outlined),
+.dangerCard h2 {
+  color: #ef4444;
+}
+
+.dangerCard strong {
+  display: block;
+  font-size: 1.8rem;
+  letter-spacing: -0.04em;
+}
+
+.deployForm label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.deployForm input,
+.deployForm select,
+.commandRow input {
+  min-height: 2.65rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(139, 92, 246, 0.16);
+  background: rgba(15, 23, 42, 0.62);
+  color: #fff;
+  padding: 0.7rem 0.8rem;
+}
+
+.primaryButton,
+.trapRow button,
+.cardHead button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.65rem;
+  border-radius: 0.85rem;
+  border: 0;
+  background: #8B5CF6;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.metricGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.metricCard p {
+  margin: 0 0 0.35rem;
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metricCard div {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.45rem;
+}
+
+.metricCard strong {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.metricUp {
+  color: #10b981;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.metricNeutral {
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.logPanel {
+  position: relative;
+  overflow: hidden;
+  min-height: 32rem;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.logPanel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  height: 6rem;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(139, 92, 246, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.logHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  background: rgba(139, 92, 246, 0.1);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.logHeader div:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.logHeader strong {
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.logHeader :global(.material-symbols-outlined) {
+  color: #8b83ff;
+  font-size: 1rem;
+}
+
+.logBadges {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.logBadges span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.45rem;
+  padding: 0 0.45rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: rgba(139, 92, 246, 0.12);
+  color: #8b83ff;
+  font-size: 0.62rem;
+  font-family: Consolas, "Courier New", monospace;
+}
+
+.logStream {
+  padding: 1rem;
+  overflow-y: auto;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.78rem;
+}
+
+.logLine {
+  display: grid;
+  grid-template-columns: auto auto auto 1fr auto;
+  gap: 0.8rem;
+  padding: 0.5rem;
+  border-radius: 0.55rem;
+}
+
+.logLine:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.logTime {
+  color: #64748b;
+}
+
+.logDanger {
+  color: #ef4444;
+  font-weight: 800;
+}
+
+.logWarn {
+  color: #10b981;
+  font-weight: 800;
+}
+
+.logInfo {
+  color: #8b83ff;
+  font-weight: 800;
+}
+
+.logIp {
+  color: #8b83ff;
+}
+
+.logText {
+  color: #dbe4f0;
+}
+
+.logMeta {
+  color: #64748b;
+}
+
+.emptyLog {
+  color: #94a3b8;
+}
+
+.commandRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+  background: rgba(10, 10, 15, 0.9);
+}
+
+.commandRow > span {
+  color: #8B5CF6;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 1rem;
+}
+
+.commandRow input {
+  flex: 1 1 auto;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.commandRow div {
+  display: flex;
+  gap: 0.65rem;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.62rem;
+}
+
+.bottomGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.cardHead span {
+  color: #10b981;
+  font-size: 0.72rem;
+  font-family: Consolas, "Courier New", monospace;
+  font-weight: 800;
+}
+
+.cardHead button {
+  min-height: auto;
+  padding: 0;
+  background: transparent;
+  color: #8b83ff;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.barChart {
+  display: flex;
+  align-items: end;
+  gap: 0.3rem;
+  height: 12rem;
+}
+
+.barChart span {
+  flex: 1 1 0;
+  border-radius: 0.3rem 0.3rem 0 0;
+  background: rgba(139, 92, 246, 0.24);
+}
+
+.chartAxis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  color: #64748b;
+  font-size: 0.62rem;
+  font-family: Consolas, "Courier New", monospace;
+}
+
+.geoMap {
+  position: relative;
+  min-height: 10rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.8), rgba(2, 6, 23, 0.9)),
+    radial-gradient(circle at 30% 35%, rgba(139, 92, 246, 0.12), transparent 24%);
+  overflow: hidden;
+}
+
+.mapPointA,
+.mapPointB,
+.mapPointC {
+  position: absolute;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: #ef4444;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
+}
+
+.mapPointA {
+  top: 26%;
+  left: 34%;
+}
+
+.mapPointB {
+  top: 48%;
+  left: 66%;
+}
+
+.mapPointC {
+  bottom: 24%;
+  left: 26%;
+}
+
+.geoStats {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.trapTableCard {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.trapTable {
+  gap: 0.55rem;
+}
+
+.trapRow {
+  padding: 0.75rem 0.8rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.trapRow code {
+  color: #fde68a;
+  font-family: Consolas, "Courier New", monospace;
+}
+
+.trapRow button {
+  min-height: 2.1rem;
+  padding: 0 0.7rem;
+  font-size: 0.72rem;
+}
+
+@media (max-width: 1180px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .metricGrid,
+  .bottomGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .topBar,
+  .headerActions,
+  .brandBlock,
+  .logHeader,
+  .commandRow,
+  .trapRow,
+  .cardHead {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .logLine {
+    grid-template-columns: 1fr;
+  }
+
+  .commandRow div {
+    flex-wrap: wrap;
+  }
+}
+

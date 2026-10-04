@@ -1,0 +1,109 @@
+.offerContainer {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: rgba(15, 14, 23, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 1rem;
+  padding: 1.25rem;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 1rem 0;
+}
+
+.offerList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.offerBanner {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 0.75rem;
+}
+
+.offerBannerIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  background: rgba(139, 92, 246, 0.2);
+  color: #a5b4fc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.offerBannerBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.offerBannerBody span {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #a5b4fc;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.offerBannerBody strong {
+  font-size: 0.9rem;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.offerBannerBody small {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.bankOffer {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.bankOfferBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+}
+
+.bankOfferBody strong {
+  font-size: 0.85rem;
+  color: #e2e8f0;
+}
+
+.bankOfferBody small {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+.tncLink {
+  background: transparent;
+  border: none;
+  color: #8C63F5;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0;
+  margin-top: 0.25rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tncLink:hover {
+  text-decoration: underline;
+}
+

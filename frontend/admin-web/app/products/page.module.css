@@ -1,0 +1,70 @@
+.pageRoot {
+  font-family: var(--font-display), sans-serif;
+}
+
+.glassCard {
+  background: rgba(139, 92, 246, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.sidebar {
+  position: sticky;
+  top: 1.5rem;
+  align-self: flex-start;
+}
+
+.sidebarCard {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.mainColumn {
+  min-width: 0;
+}
+
+.toolbarRow {
+  padding-bottom: 0.25rem;
+}
+
+.heroCopy {
+  min-width: 0;
+}
+
+.toolbarActions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.searchShell {
+  min-width: 0;
+}
+
+.addButton {
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.24);
+}
+
+.inventoryShell {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.activeRow {
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.rowActions {
+  opacity: 1;
+}
+
+.actionButton {
+  border-radius: 0.75rem;
+  background: rgba(15, 14, 23, 0.55);
+  border: 1px solid rgba(139, 92, 246, 0.14);
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    position: static;
+    top: auto;
+  }
+}
+

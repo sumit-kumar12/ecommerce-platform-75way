@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+:root {
+  --admin-sidebar-width: clamp(220px, 18vw, 280px);
+  --primary: #8B5CF6;
+  --background-light: #f8f9fb;
+  --background-dark: #0F0E17;
+  --accent-cyan: #00f2ff;
+  --accent-danger: #ff3e3e;
+  
+  --font-space-grotesk: 'Space Grotesk', sans-serif;
+}
+
+html.dark {
+  --bg-main: var(--background-dark);
+  --bg-secondary: #0F0E17;
+  --glass-bg: rgba(15, 14, 23, 0.7);
+  --glass-border: rgba(139, 92, 246, 0.25);
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+}
+
+html:not(.dark) {
+  --bg-main: var(--background-light);
+  --bg-secondary: #ffffff;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(139, 92, 246, 0.1);
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-space-grotesk), sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 0;
+}
+
+/* Glass Utilities */
+.glass-panel {
+  background: linear-gradient(135deg, var(--glass-bg) 0%, rgba(15, 14, 23, 0.4) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(15, 14, 23, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.neon-glow {
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.8);
+}
+
+.radar-grid {
+  background-image: radial-gradient(circle, rgba(139, 92, 246, 0.15) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+/* Animations */
+@keyframes scan {
+  from { top: 0; transform: translateY(-100%); }
+  to { top: 100%; transform: translateY(0); }
+}
+
+.scanner-line {
+  background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+  height: 40px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0 15px var(--primary);
+  animation: scan 4s linear infinite;
+  pointer-events: none;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --admin-sidebar-width: 0px;
+  }
+}
+

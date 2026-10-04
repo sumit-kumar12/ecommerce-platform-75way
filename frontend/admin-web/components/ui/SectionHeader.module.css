@@ -1,0 +1,49 @@
+.header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--neon-cyan);
+}
+
+.titleRow span {
+  font-size: 1.25rem;
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.description {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  max-width: 60ch;
+  margin: 0;
+}
+
+.action {
+  padding-bottom: 0.5rem;
+}

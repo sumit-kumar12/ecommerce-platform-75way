@@ -1,0 +1,35 @@
+.panel {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.icon {
+  font-size: 3.2rem;
+  color: rgba(148, 163, 184, 0.34);
+}
+
+.panel h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  letter-spacing: -0.04em;
+  color: #f8fafc;
+}
+
+.panel p {
+  margin: 0;
+  max-width: 34rem;
+  color: var(--kb-text-soft);
+  line-height: 1.75;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+

@@ -1,0 +1,38 @@
+.pageRoot {
+  --primary: #8B5CF6;
+  --accent-neon: #0bda68;
+  --danger-neon: #ff3e3e;
+  --warning-neon: #facc15;
+}
+
+.glassPanel {
+  background: rgba(139, 92, 246, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.glowBorderPrimary {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+}
+
+.neonTextGreen {
+  text-shadow: 0 0 8px rgba(11, 218, 104, 0.5);
+}
+
+@keyframes scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100%); }
+}
+
+.scannerLine {
+  background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+  height: 40px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0 15px var(--primary);
+  animation: scan 4s linear infinite;
+  pointer-events: none;
+}
+

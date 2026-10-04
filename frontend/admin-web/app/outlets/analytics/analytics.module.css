@@ -1,0 +1,135 @@
+.container {
+  padding: 32px;
+  color: #94a3b8;
+  font-family: 'Inter', sans-serif;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.title {
+  color: #f8fafc;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.select {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+  padding: 8px 16px;
+  border-radius: 8px;
+  outline: none;
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.kpiCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.kpiCard h3 {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 12px 0;
+}
+
+.kpiValue {
+  color: #f8fafc;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.positive {
+  color: #10b981;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.neutral {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.chartPanel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.panelTitle {
+  color: #f8fafc;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 32px 0;
+}
+
+.chartPlaceholder {
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dualChart {
+  flex: 1;
+  position: relative;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 16px;
+}
+
+.bars {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 0 20px;
+}
+
+.bar {
+  width: 40px;
+  background: rgba(140, 99, 245, 0.2);
+  border-radius: 4px 4px 0 0;
+  border-top: 2px solid rgba(140, 99, 245, 0.5);
+}
+
+.line {
+  position: absolute;
+  top: 30%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #00DAFF;
+  box-shadow: 0 0 10px #00DAFF;
+}
+
+.xLabels {
+  display: flex;
+  justify-content: space-between;
+  color: #64748b;
+  font-size: 13px;
+  padding: 0 10px;
+}

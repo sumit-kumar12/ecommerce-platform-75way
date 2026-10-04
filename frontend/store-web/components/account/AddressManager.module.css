@@ -1,0 +1,419 @@
+.addressSection {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 0;
+  width: 100%;
+}
+
+.addressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.headerIcon {
+  font-size: 24px;
+  color: #A78BFA;
+}
+
+.headerLeft h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #f8fafc;
+}
+
+.headerLeft p {
+  margin: 4px 0 0;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.addAddressBtn {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.addAddressBtn:hover {
+  background: #4338ca;
+}
+
+.addressContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.addressCard {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+  transition: all 0.2s ease;
+}
+
+.addressCard:hover {
+  border-color: #475569;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.addressCardDefault {
+  border: 2px solid #A78BFA;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.cardIcon {
+  background: rgba(167, 139, 250, 0.1);
+  color: #A78BFA;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.defaultBadge {
+  background: #4f46e5;
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.moreIcon {
+  color: #94a3b8;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.addressCard h3 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  color: #f8fafc;
+}
+
+.info {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #cbd5e1;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.infoIcon {
+  color: #64748b;
+  font-size: 16px;
+  margin-top: 2px;
+}
+
+.cardActions {
+  border-top: 1px solid #334155;
+  margin-top: 16px;
+  padding-top: 16px;
+  display: flex;
+  gap: 12px;
+}
+
+.editBtn, .deleteBtn {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.editBtn {
+  color: #A78BFA;
+}
+
+.deleteBtn {
+  color: #f87171;
+}
+
+.addNewCard {
+  border: 2px dashed #475569;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  padding: 32px 20px;
+  transition: all 0.2s ease;
+  min-height: 220px;
+}
+
+.addNewCard:hover {
+  border-color: #A78BFA;
+  background: rgba(167, 139, 250, 0.05);
+}
+
+.addCircle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(167, 139, 250, 0.1);
+  color: #A78BFA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.addNewCard h3 {
+  color: #A78BFA;
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+.addNewCard p {
+  color: #94a3b8;
+  font-size: 14px;
+  margin: 0;
+  max-width: 200px;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .addressHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modalContent {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  padding: 20px 24px;
+  border-bottom: 1px solid #334155;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalHeader h3 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 20px;
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeBtn:hover {
+  color: #f8fafc;
+}
+
+.modalForm {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formGroupCheckbox {
+  display: flex;
+  align-items: center;
+  margin-top: 26px;
+  color: #cbd5e1;
+}
+
+.formGroup label {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.formGroup input, .formGroup select {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #f8fafc;
+  font-size: 16px;
+}
+
+.formGroup input:focus, .formGroup select:focus {
+  outline: none;
+  border-color: #A78BFA;
+}
+
+.modalActions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #334155;
+}
+
+.cancelBtn {
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid #475569;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cancelBtn:hover {
+  color: #f8fafc;
+}
+
+.saveBtn {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.saveBtn:disabled {
+  background: #3730a3;
+  cursor: not-allowed;
+}
+/* Custom Delete Modal */
+.kbModal {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999; padding: 20px;
+}
+
+.kbModalCard {
+  background: linear-gradient(145deg, #0f1326, #161b3a);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  border-radius: 20px; padding: 30px; width: 420px;
+  max-width: 95%; text-align: center; position: relative;
+  box-shadow: 0 0 40px rgba(124, 58, 237, 0.25),
+              0 0 80px rgba(26, 72, 153, 0.15);
+  animation: modalPop 0.3s ease;
+}
+
+@keyframes modalPop {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.kbClose {
+  position: absolute; top: 16px; right: 16px;
+  background: transparent; border: none;
+  color: rgba(255, 255, 255, 0.5); cursor: pointer;
+  font-size: 24px; display: flex; align-items: center; justify-content: center;
+}
+.kbClose:hover { color: #fff; }
+
+.kbIcon {
+  width: 80px; height: 80px; border-radius: 50%;
+  margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
+  background: rgba(255, 0, 85, 0.1);
+  color: #ff0055; font-size: 40px;
+  border: 2px solid rgba(255, 0, 85, 0.5);
+  box-shadow: 0 0 20px rgba(255, 0, 85, 0.3), inset 0 0 20px rgba(255, 0, 85, 0.2);
+}
+
+.kbModalCard h3 {
+  color: #fff; font-size: 24px; margin: 0 0 10px 0; font-weight: 600;
+}
+.kbModalCard h3 span { color: #ff0055; }
+
+.kbModalCard p {
+  color: #94a3b8; font-size: 15px; margin: 0 0 24px 0; line-height: 1.5;
+}
+
+.kbActions {
+  display: flex; gap: 16px; justify-content: center;
+}
+
+.kbCancel {
+  background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff; padding: 12px 24px; border-radius: 12px; cursor: pointer;
+  font-size: 16px; font-weight: 500; transition: all 0.2s; flex: 1;
+}
+.kbCancel:hover { background: rgba(255, 255, 255, 0.1); }
+
+.kbDelete {
+  background: linear-gradient(90deg, #ff0055, #ff00a2); border: none;
+  color: #fff; padding: 12px 24px; border-radius: 12px; cursor: pointer;
+  font-size: 16px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 0 20px rgba(255, 0, 85, 0.4); transition: all 0.2s; flex: 1;
+}
+.kbDelete:hover { box-shadow: 0 0 30px rgba(255, 0, 85, 0.6); transform: translateY(-2px); }
+

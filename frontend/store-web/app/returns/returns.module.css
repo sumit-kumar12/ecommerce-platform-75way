@@ -1,0 +1,218 @@
+.container {
+  padding: 24px;
+  color: #94a3b8;
+  font-family: 'Inter', sans-serif;
+  animation: fadeIn 0.3s ease-out;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pageTitle {
+  color: #f8fafc;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+.tabsContainer {
+  margin-bottom: 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tabsScroll {
+  display: flex;
+  gap: 32px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+}
+
+.tabBtn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.tabBtn:hover {
+  color: #f8fafc;
+}
+
+.activeTab {
+  color: #8C63F5;
+  font-weight: 600;
+}
+
+.activeTab::after {
+  content: '';
+  position: absolute;
+  bottom: -17px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #8C63F5;
+  border-radius: 3px 3px 0 0;
+}
+
+.tabBadge {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.activeTab .tabBadge {
+  background: rgba(140, 99, 245, 0.2);
+  color: #8C63F5;
+}
+
+.returnsList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.returnCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.2s ease;
+}
+
+.returnCard:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(140, 99, 245, 0.3);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.headerInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.returnId {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+.orderId {
+  color: #94a3b8;
+}
+
+.date {
+  color: #64748b;
+}
+
+.dot {
+  color: #475569;
+}
+
+.statusBadge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.statusBlue {
+  background: rgba(0, 218, 255, 0.1);
+  color: #00DAFF;
+}
+
+.statusGreen {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.statusPurple {
+  background: rgba(140, 99, 245, 0.1);
+  color: #8C63F5;
+}
+
+.statusRed {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.productInfo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.productImage {
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.productDetails {
+  flex: 1;
+}
+
+.productName {
+  color: #f8fafc;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+.productMeta {
+  color: #94a3b8;
+  font-size: 14px;
+  margin: 0;
+}
+
+.viewLink {
+  color: #8C63F5;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.viewLink:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .headerInfo {
+    flex-wrap: wrap;
+  }
+}
+

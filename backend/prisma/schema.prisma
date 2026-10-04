@@ -1,0 +1,1373 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres", "metrics", "postgresqlExtensions", "tracing"]
+  engineType      = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                        String                  @id @default(uuid())
+  email                     String                  @unique
+  passwordHash              String?
+  googleId                  String?                 @unique
+  instagramId               String?                 @unique
+  name                      String
+  phone                     String?                 @unique
+  isEmailVerified           Boolean                 @default(false)
+  isPhoneVerified           Boolean                 @default(false)
+  role                      Role                    @default(CUSTOMER)
+  isActive                  Boolean                 @default(true)
+  failedLoginAttempts       Int                     @default(0)
+  lockedUntil               DateTime?
+  createdAt                 DateTime                @default(now())
+  updatedAt                 DateTime                @updatedAt
+  accessRevocations         AccessTokenRevocation[]
+  addresses                 Address[]
+  auditLogs                 AuditLog[]              @relation("ActorAuditLogs")
+  authAttemptCounters       AuthAttemptCounter[]
+  cart                      Cart?
+  updatedCompliancePolicies CompliancePolicy[]      @relation("CompliancePolicyUpdater")
+  createdEmergencyAlerts    EmergencyAlert[]        @relation("EmergencyAlertCreator")
+  updatedEmergencyConfigs   EmergencyConfig[]       @relation("EmergencyConfigUpdater")
+  updatedPolicies           GlobalPaymentPolicy[]   @relation("PaymentPolicyUpdater")
+  createdHoneypotTraps      HoneypotTrap[]          @relation("HoneypotTrapCreator")
+  createdIncidents          Incident[]              @relation("IncidentCreator")
+  updatedIncidents          Incident[]              @relation("IncidentUpdater")
+  assignedIncidents         Incident[]              @relation("IncidentAssignee")
+  notificationEvents        NotificationEvent[]     @relation("NotificationRecipient")
+  offerRedemptions          OfferRedemption[]
+  orders                    Order[]                 @relation("CustomerOrders")
+  orderItemsListed          OrderItem[]             @relation("ListerOrderItems")
+  passwordResetTokens       PasswordResetToken[]
+  products                  Product[]               @relation("ListerProducts")
+  productQAs                ProductQA[]             @relation("ProductQAAuthor")
+  productQAAnswers          ProductQAAnswer[]       @relation("ProductQAAnswerAuthor")
+  refreshTokens             RefreshToken[]
+  returnRequests            ReturnRequest[]
+  reviews                   Review[]
+  updatedRolePolicies       RolePolicy[]            @relation("RolePolicyUpdater")
+  sessionBindings           SessionBinding[]
+  threatEvents              ThreatEvent[]
+  updatedThreatRules        ThreatRule[]            @relation("ThreatRuleUpdater")
+  threatScores              ThreatScore[]
+  notifications             UserNotification[]
+  notificationPreferences   NotificationPreference[]
+  wishlist                  Wishlist?
+  socCasesCreated           SocCase[]              @relation("SocCaseCreator")
+  socCasesUpdated           SocCase[]              @relation("SocCaseUpdater")
+  socCasesAssigned          SocCase[]              @relation("SocCaseAssignee")
+  socCaseNotes              SocCaseNote[]          @relation("SocCaseNoteAuthor")
+  socPlaybookRuns           SocPlaybookRun[]       @relation("SocPlaybookRunStarter")
+  socResponseActions        SocResponseAction[]    @relation("SocResponseActionExecutor")
+  siemConfigUpdates         SiemConfig[]           @relation("SiemConfigUpdater")
+  drawerShifts              DrawerShift[]
+}
+
+model Address {
+  id         String      @id @default(uuid())
+  userId     String
+  isDefault  Boolean     @default(false)
+  name       String
+  phone      String
+  line1      String
+  line2      String?
+  city       String
+  region     String
+  postalCode String
+  country    String      @default("India")
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  type       AddressType @default(Home)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model RefreshToken {
+  id                  String    @id @default(uuid())
+  userId              String
+  tokenHash           String    @unique
+  jti                 String    @unique
+  familyId            String
+  deviceIdHash        String
+  issuedAt            DateTime  @default(now())
+  expiresAt           DateTime
+  usedAt              DateTime?
+  revokedAt           DateTime?
+  revocationReason    String?
+  createdByIp         String?
+  replacedByTokenHash String?
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, familyId])
+}
+
+model PasswordResetToken {
+  id          String    @id @default(uuid())
+  userId      String
+  tokenHash   String    @unique
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime  @default(now())
+  createdByIp String?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([expiresAt])
+}
+
+model Category {
+  id          String     @id @default(uuid())
+  name        String
+  slug        String     @unique
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  description String?
+  iconName    String?
+  parentId    String?
+  sortOrder   Int        @default(0)
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+  offers      Offer[]
+  products    Product[]
+
+  @@index([parentId, sortOrder])
+  @@index([isActive, sortOrder])
+}
+
+model Product {
+  id                 String           @id @default(uuid())
+  listerId           String
+  categoryId         String
+  name               String
+  description        String
+  isDigital          Boolean          @default(false)
+  paymentOnlineOnly  Boolean          @default(false)
+  paymentAllowCOD    Boolean          @default(true)
+  paymentMinCODPrice Decimal?         @db.Decimal(12, 2)
+  isActive           Boolean          @default(true)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  slug               String?          @unique
+  shortDescription   String?
+  seoTitle           String?
+  seoDescription     String?
+  shippingPrice      Decimal?         @db.Decimal(12, 2)
+  flashDeals         FlashDeal[]
+  heroCampaigns      HeroCampaign[]
+  orderItems         OrderItem[]
+  category           Category         @relation(fields: [categoryId], references: [id])
+  lister             User             @relation("ListerProducts", fields: [listerId], references: [id])
+  images             ProductImage[]
+  variants           ProductVariant[]
+  reviews            Review[]
+  sponsoredAds       SponsoredAd[]
+  wishlistItems      WishlistItem[]
+  productQAs         ProductQA[]
+
+  @@index([listerId])
+  @@index([categoryId])
+  @@index([name])
+}
+
+model ProductVariant {
+  id              String            @id @default(uuid())
+  productId       String
+  sku             String            @unique
+  title           String
+  attributes      Json
+  price           Decimal           @db.Decimal(12, 2)
+  stock           Int
+  isActive        Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  compareAtPrice  Decimal?          @db.Decimal(12, 2)
+  cartItems       CartItem[]
+  orderItems      OrderItem[]
+  outletInventory OutletInventory[]
+  product         Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model ProductImage {
+  id           String   @id @default(uuid())
+  productId    String
+  storageKey   String   @unique
+  originalName String
+  mimeType     String
+  sizeBytes    Int
+  altText      String?
+  isPrimary    Boolean  @default(false)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  caption      String?
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([productId, isPrimary])
+  @@index([productId, sortOrder])
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  offerId   String?
+  offer     Offer?     @relation(fields: [offerId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+}
+
+model CartItem {
+  id        String         @id @default(uuid())
+  cartId    String
+  variantId String
+  quantity  Int
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  cart      Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variant   ProductVariant @relation(fields: [variantId], references: [id])
+
+  @@unique([cartId, variantId])
+  @@index([variantId])
+}
+
+model Wishlist {
+  id        String         @id @default(uuid())
+  userId    String         @unique
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     WishlistItem[]
+}
+
+model WishlistItem {
+  id         String   @id @default(uuid())
+  wishlistId String
+  productId  String
+  createdAt  DateTime @default(now())
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+
+  @@unique([wishlistId, productId])
+  @@index([productId])
+}
+
+model Order {
+  id               String            @id @default(uuid())
+  orderNumber      String            @unique
+  userId           String
+  status           OrderStatus       @default(PENDING_PAYMENT)
+  paymentMethod    PaymentMethod
+  paymentStatus    PaymentStatus     @default(PENDING)
+  subtotal         Decimal           @db.Decimal(12, 2)
+  totalAmount      Decimal           @db.Decimal(12, 2)
+  currency         String            @default("INR")
+  shippingAddress  Json
+  notes            String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  paidAt           DateTime?
+  outletId         String?
+  shippingFee      Decimal           @default(0) @db.Decimal(12, 2)
+  couponDiscount   Decimal           @default(0) @db.Decimal(12, 2)
+  offerId          String?
+  trackingNumber   String?
+  shippingCarrier  String?
+  offerRedemptions OfferRedemption[]
+  offer            Offer?            @relation(fields: [offerId], references: [id])
+  outlet           Outlet?           @relation(fields: [outletId], references: [id])
+  user             User              @relation("CustomerOrders", fields: [userId], references: [id])
+  items            OrderItem[]
+  payments         Payment[]
+  returnRequests   ReturnRequest[]
+
+  @@index([userId, status])
+  @@index([outletId])
+}
+
+model OrderItem {
+  id                String         @id @default(uuid())
+  orderId           String
+  productId         String
+  variantId         String
+  listerId          String
+  quantity          Int
+  unitPrice         Decimal        @db.Decimal(12, 2)
+  lineTotal         Decimal        @db.Decimal(12, 2)
+  createdAt         DateTime       @default(now())
+  appliedOffer      Json?
+  lineSavings       Decimal        @default(0) @db.Decimal(12, 2)
+  originalUnitPrice Decimal?       @db.Decimal(12, 2)
+  lister            User           @relation("ListerOrderItems", fields: [listerId], references: [id])
+  order             Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product           Product        @relation(fields: [productId], references: [id])
+  variant           ProductVariant @relation(fields: [variantId], references: [id])
+  returnItems       ReturnItem[]
+
+  @@index([orderId])
+  @@index([listerId])
+}
+
+model Payment {
+  id                   String        @id @default(uuid())
+  orderId              String
+  provider             String        @default("razorpay")
+  providerOrderId      String
+  providerPaymentId    String?
+  signature            String?
+  expectedAmount       Int
+  receivedAmount       Int?
+  status               PaymentStatus @default(PENDING)
+  verifiedAt           DateTime?
+  verificationAttempts Int           @default(0)
+  failureReason        String?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  order                Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerOrderId])
+  @@index([orderId])
+}
+
+model NotificationEvent {
+  id          String              @id @default(uuid())
+  recipientId String?
+  channel     NotificationChannel
+  eventType   String
+  status      NotificationStatus
+  destination String
+  details     Json
+  createdAt   DateTime            @default(now())
+  recipient   User?               @relation("NotificationRecipient", fields: [recipientId], references: [id])
+
+  @@index([recipientId, channel, eventType, createdAt])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String
+  action     String
+  targetType String
+  targetId   String
+  details    Json
+  ip         String
+  userAgent  String
+  createdAt  DateTime @default(now())
+  actor      User     @relation("ActorAuditLogs", fields: [actorId], references: [id])
+
+  @@index([actorId, createdAt])
+}
+
+model ThreatScore {
+  id          String   @id @default(uuid())
+  subjectKey  String   @unique
+  userId      String?
+  ip          String
+  score       Int      @default(0)
+  lastEventAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId, ip])
+  @@index([ip])
+}
+
+model ThreatEvent {
+  id        String        @id @default(uuid())
+  userId    String?
+  ip        String
+  eventType String
+  points    Int
+  severity  EventSeverity
+  details   Json
+  createdAt DateTime      @default(now())
+  user      User?         @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([ip, createdAt])
+}
+
+model ThreatRule {
+  id              String    @id @default(uuid())
+  eventType       String    @unique
+  title           String
+  description     String
+  points          Int
+  enabled         Boolean   @default(true)
+  lastTriggeredAt DateTime?
+  triggerCount    Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  updatedById     String?
+  // SIEM automation fields
+  autoCreateCase  Boolean   @default(false)
+  caseSeverity    String?
+  caseTitle       String?
+  playbookId      String?
+  notifyChannels  Json?
+  updatedBy       User?     @relation("ThreatRuleUpdater", fields: [updatedById], references: [id])
+
+  @@index([enabled])
+  @@index([lastTriggeredAt])
+  @@index([autoCreateCase])
+}
+
+model IPBlock {
+  id           String   @id @default(uuid())
+  ip           String   @unique
+  blockedUntil DateTime
+  reason       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model AuthAttemptCounter {
+  id             String    @id @default(uuid())
+  subjectKey     String    @unique
+  userId         String?
+  ip             String
+  email          String?
+  failedCount    Int       @default(0)
+  firstAttemptAt DateTime  @default(now())
+  lastAttemptAt  DateTime  @updatedAt
+  blockedUntil   DateTime?
+  user           User?     @relation(fields: [userId], references: [id])
+
+  @@index([ip, lastAttemptAt])
+  @@index([email, lastAttemptAt])
+}
+
+model AccessTokenRevocation {
+  id        String   @id @default(uuid())
+  jti       String   @unique
+  userId    String
+  familyId  String?
+  reason    String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([expiresAt])
+}
+
+model SessionBinding {
+  id                    String    @id @default(uuid())
+  userId                String
+  familyId              String
+  deviceIdHash          String
+  initialIp             String
+  initialUserAgentHash  String
+  lastSeenIp            String?
+  lastSeenUserAgentHash String?
+  createdAt             DateTime  @default(now())
+  lastSeenAt            DateTime  @default(now())
+  revokedAt             DateTime?
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, familyId])
+  @@index([familyId])
+}
+
+model GlobalPaymentPolicy {
+  id                 String   @id @default(uuid())
+  singletonKey       String   @unique @default("GLOBAL")
+  onlineOnly         Boolean  @default(false)
+  allowCOD           Boolean  @default(true)
+  minCODPrice        Decimal? @db.Decimal(12, 2)
+  forceDigitalOnline Boolean  @default(true)
+  updatedById        String?
+  updatedAt          DateTime @updatedAt
+  createdAt          DateTime @default(now())
+  updatedBy          User?    @relation("PaymentPolicyUpdater", fields: [updatedById], references: [id])
+}
+
+model Incident {
+  id          String           @id @default(uuid())
+  title       String
+  description String
+  severity    IncidentSeverity
+  status      IncidentStatus   @default(OPEN)
+  createdById String
+  updatedById String?
+  assigneeId  String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  createdBy   User             @relation("IncidentCreator", fields: [createdById], references: [id])
+  updatedBy   User?            @relation("IncidentUpdater", fields: [updatedById], references: [id])
+  assignee    User?            @relation("IncidentAssignee", fields: [assigneeId], references: [id])
+
+  @@index([status, severity, createdAt])
+  @@index([createdById, createdAt])
+  @@index([assigneeId])
+}
+
+model HoneypotTrap {
+  id              String    @id @default(uuid())
+  path            String    @unique
+  type            String
+  active          Boolean   @default(true)
+  triggerCount    Int       @default(0)
+  lastTriggeredAt DateTime?
+  createdById     String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdBy       User      @relation("HoneypotTrapCreator", fields: [createdById], references: [id])
+
+  @@index([active, updatedAt])
+}
+
+model RolePolicy {
+  id          String   @id @default(uuid())
+  role        Role     @unique
+  color       String
+  permissions Json
+  updatedById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  updatedBy   User?    @relation("RolePolicyUpdater", fields: [updatedById], references: [id])
+}
+
+model EmergencyConfig {
+  id              String   @id @default(uuid())
+  singletonKey    String   @unique @default("GLOBAL")
+  enabled         Boolean  @default(false)
+  channels        Json
+  defaultSeverity String   @default("HIGH")
+  recipients      Json
+  updatedById     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  updatedBy       User?    @relation("EmergencyConfigUpdater", fields: [updatedById], references: [id])
+}
+
+model EmergencyAlert {
+  id          String   @id @default(uuid())
+  severity    String
+  message     String
+  channels    Json
+  recipients  Json
+  status      String
+  createdById String
+  createdAt   DateTime @default(now())
+  createdBy   User     @relation("EmergencyAlertCreator", fields: [createdById], references: [id])
+
+  @@index([createdAt, severity])
+}
+
+model CompliancePolicy {
+  id             String    @id @default(uuid())
+  name           String    @unique
+  category       String
+  status         String
+  lastReviewedAt DateTime?
+  nextReviewAt   DateTime?
+  updatedById    String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  updatedBy      User?     @relation("CompliancePolicyUpdater", fields: [updatedById], references: [id])
+
+  @@index([status, category])
+}
+
+model Offer {
+  id               String            @id @default(uuid())
+  title            String
+  description      String?
+  code             String?           @unique
+  discountPercent  Int               @default(0)
+  startDate        DateTime
+  endDate          DateTime
+  isActive         Boolean           @default(true)
+  categoryId       String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  perCustomerLimit Int?
+  redeemedCount    Int               @default(0)
+  usageLimit       Int?
+  carts            Cart[]
+  category         Category?         @relation(fields: [categoryId], references: [id])
+  redemptions      OfferRedemption[]
+  orders           Order[]
+
+  @@index([isActive, startDate, endDate])
+  @@index([redeemedCount])
+}
+
+model OfferRedemption {
+  id        String   @id @default(uuid())
+  offerId   String
+  userId    String
+  orderId   String
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  offer     Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([offerId, userId])
+  @@index([orderId])
+}
+
+model HeroCampaign {
+  id        String           @id @default(uuid())
+  name      String           @db.VarChar(120)
+  title     String?          @db.VarChar(200)
+  subtitle  String?          @db.VarChar(200)
+  ctaText   String?          @db.VarChar(80)
+  linkUrl   String?          @db.VarChar(500)
+  mediaUrl  String           @db.VarChar(2000)
+  startDate DateTime
+  endDate   DateTime
+  isActive  Boolean          @default(true)
+  priority  Int              @default(0)
+  clicks    Int              @default(0)
+  productId String?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  views     Int              @default(0)
+  type      HeroCampaignType @default(Image)
+  product   Product?         @relation(fields: [productId], references: [id])
+
+  @@index([isActive, startDate, endDate])
+  @@index([priority])
+}
+
+model FlashDeal {
+  id               String       @id @default(uuid())
+  name             String
+  productId        String
+  discountValue    Decimal      @db.Decimal(10, 2)
+  startDate        DateTime
+  endDate          DateTime
+  stockQuantity    Int          @default(0)
+  soldQuantity     Int          @default(0)
+  priority         Int          @default(0)
+  mediaUrl         String?
+  isActive         Boolean      @default(true)
+  views            Int          @default(0)
+  clicks           Int          @default(0)
+  revenueGenerated Decimal      @default(0.0) @db.Decimal(14, 2)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  discountType     DiscountType @default(PERCENTAGE)
+  product          Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([isActive, startDate, endDate])
+}
+
+model SponsoredAd {
+  id           String            @id @default(uuid())
+  campaignName String            @db.VarChar(255)
+  productId    String
+  adPosition   Int               @default(1)
+  bannerImage  String?           @db.VarChar(2000)
+  startDate    DateTime
+  endDate      DateTime
+  dailyBudget  Decimal           @db.Decimal(10, 2)
+  totalBudget  Decimal           @db.Decimal(10, 2)
+  impressions  Int               @default(0)
+  clicks       Int               @default(0)
+  revenue      Decimal           @default(0) @db.Decimal(10, 2)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  status       SponsoredAdStatus @default(active)
+  product      Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([startDate, endDate])
+}
+
+model Outlet {
+  id          String            @id @default(uuid())
+  name        String
+  address     String
+  city        String
+  state       String
+  pincode     String
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  orders      Order[]
+  inventories OutletInventory[]
+}
+
+model OutletInventory {
+  id             String         @id @default(uuid())
+  outletId       String
+  variantId      String
+  stock          Int            @default(0)
+  alertThreshold Int            @default(5)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  outlet         Outlet         @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  variant        ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@unique([outletId, variantId])
+  @@index([variantId])
+}
+
+model ShippingConfig {
+  id            String   @id @default(uuid())
+  type          String   @unique
+  price         Decimal  @db.Decimal(12, 2)
+  estimatedDays Int
+  isEnabled     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ShippingSettings {
+  id                    String   @id @default("singleton")
+  allowGlobalCOD        Boolean  @default(true)
+  freeShippingThreshold Decimal? @db.Decimal(12, 2)
+  maxCODPrice           Decimal? @db.Decimal(12, 2)
+  updatedAt             DateTime @updatedAt
+}
+
+model Review {
+  id        String       @id @default(uuid())
+  productId String
+  userId    String
+  rating    Int
+  comment   String?
+  status    ReviewStatus @default(APPROVED)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([userId])
+}
+
+model ReturnRequest {
+  id        String       @id @default(uuid())
+  orderId   String
+  userId    String
+  status    ReturnStatus @default(PENDING)
+  reason    String
+  notes     String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  items     ReturnItem[]
+  order     Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ReturnItem {
+  id              String        @id @default(uuid())
+  returnRequestId String
+  orderItemId     String
+  quantity        Int
+  reason          String?
+  orderItem       OrderItem     @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  returnRequest   ReturnRequest @relation(fields: [returnRequestId], references: [id], onDelete: Cascade)
+}
+
+model UserNotification {
+  id        String               @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  isRead    Boolean              @default(false)
+  createdAt DateTime             @default(now())
+  type      UserNotificationType
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([userId, isRead])
+}
+
+enum Role {
+  CUSTOMER
+  PRODUCT_LISTER
+  ADMIN
+  SUPER_ADMIN
+  SECURITY_ADMIN
+  COMMERCE_ADMIN
+  SUPPORT_AGENT
+  VIEWER
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+  RETURNED
+}
+
+enum PaymentMethod {
+  ONLINE
+  COD
+}
+
+model DrawerShift {
+  id              String    @id @default(uuid())
+  openedAt        DateTime  @default(now())
+  closedAt        DateTime?
+  openingBalance  Decimal   @db.Decimal(12, 2)
+  closingBalance  Decimal?  @db.Decimal(12, 2)
+  actualBalance   Decimal?  @db.Decimal(12, 2)
+  discrepancy     Decimal?  @db.Decimal(12, 2)
+  notes           String?
+  status          String    @default("OPEN")
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  
+  @@index([userId, status])
+}
+
+enum PaymentStatus {
+  PENDING
+  VERIFIED
+  FAILED
+  REFUNDED
+}
+
+enum NotificationChannel {
+  EMAIL
+  WHATSAPP
+}
+
+enum NotificationStatus {
+  SENT
+  FAILED
+  RATE_LIMITED
+}
+
+enum EventSeverity {
+  INFO
+  WARN
+  CRITICAL
+}
+
+enum IncidentSeverity {
+  INFO
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum IncidentStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum AddressType {
+  Home
+  Work
+  Other
+}
+
+enum HeroCampaignType {
+  Image
+  Video
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+enum SponsoredAdStatus {
+  active
+  scheduled
+  paused
+  completed
+}
+
+enum UserNotificationType {
+  ORDER
+  OFFER
+  ACCOUNT
+  UPDATE
+}
+
+enum ReviewStatus {
+  APPROVED
+  FLAGGED
+  REJECTED
+}
+
+enum ReturnStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REFUNDED
+}
+
+model ProductQA {
+  id        String           @id @default(uuid())
+  productId String
+  authorId  String
+  question  String
+  isVisible Boolean          @default(true)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  product   Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  author    User             @relation("ProductQAAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  answers   ProductQAAnswer[]
+
+  @@index([productId, isVisible, createdAt])
+  @@index([authorId])
+}
+
+model ProductQAAnswer {
+  id        String    @id @default(uuid())
+  qaId      String
+  authorId  String
+  answer    String
+  isVisible Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  qa        ProductQA @relation(fields: [qaId], references: [id], onDelete: Cascade)
+  author    User      @relation("ProductQAAnswerAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([qaId])
+  @@index([authorId])
+}
+
+model NotificationPreference {
+  id               String   @id @default(uuid())
+  userId           String
+  channel          String   // "EMAIL" | "PUSH" | "SMS" | "WHATSAPP"
+  eventCategory    String   // "ORDER" | "OFFER" | "ACCOUNT" | "MARKETING"
+  enabled          Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, channel, eventCategory])
+  @@index([userId])
+}
+
+model PageView {
+  id        String   @id @default(uuid())
+  path      String
+  referrer  String?
+  userAgent String?
+  ip        String?
+  userId    String?
+  sessionId String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model KeywordRule {
+  id          String   @id @default(uuid())
+  keyword     String   @unique
+  action      String   @default("FLAG")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model InventorySnapshot {
+  id          String   @id @default(uuid())
+  snapshotDate DateTime @default(now()) @db.Date
+  totalStock  Int
+  stockValue  Decimal  @db.Decimal(12, 2)
+  lowStock    Int
+  outOfStock  Int
+  createdAt   DateTime @default(now())
+
+  @@unique([snapshotDate])
+  @@index([snapshotDate])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SOC CASE MANAGEMENT MODELS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model SocCase {
+  id              String              @id @default(uuid())
+  caseNumber      String              @unique
+  title           String
+  description     String?
+  severity        CaseSeverity        @default(MEDIUM)
+  priority        CasePriority        @default(MEDIUM)
+  status          CaseStatus          @default(OPEN)
+  source          String?
+  sourceEventId   String?
+  detectionRule   String?
+  threatScore     Int                 @default(0)
+  confidence      Int                 @default(0)
+  impact          String?
+  rootSuspicion   String?
+  slaDeadline     DateTime?
+  closedAt        DateTime?
+  mitreaTactics   Json?
+  tags            Json?
+  createdById     String
+  updatedById     String?
+  assigneeId      String?
+  createdBy       User                @relation("SocCaseCreator", fields: [createdById], references: [id])
+  updatedBy       User?               @relation("SocCaseUpdater", fields: [updatedById], references: [id])
+  assignee        User?               @relation("SocCaseAssignee", fields: [assigneeId], references: [id])
+  timeline        SocCaseTimeline[]
+  evidence        SocCaseEvidence[]
+  iocs            SocCaseIoc[]
+  notes           SocCaseNote[]
+  auditEntries    SocCaseAudit[]
+  affectedAssets  SocCaseAsset[]
+  affectedUsers   SocCaseUser[]
+  playbookRuns    SocPlaybookRun[]
+  responseActions SocResponseAction[]
+  relatedCases    SocCaseRelated[]    @relation("PrimaryCase")
+  relatedTo       SocCaseRelated[]    @relation("RelatedCase")
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  @@index([status, priority, createdAt])
+  @@index([severity, createdAt])
+  @@index([assigneeId, status])
+  @@index([sourceEventId])
+  @@index([status, slaDeadline])
+}
+
+model SocCaseTimeline {
+  id          String   @id @default(uuid())
+  caseId      String
+  eventType   String
+  description String
+  actorId     String?
+  actorName   String?
+  source      String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  case        SocCase  @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId, createdAt])
+}
+
+model SocCaseEvidence {
+  id           String       @id @default(uuid())
+  caseId       String
+  name         String
+  type         EvidenceType
+  source       String?
+  fileHash     String?
+  filePath     String?
+  fileSize     Int?
+  integrity    String       @default("UNVERIFIED")
+  uploadedById String?
+  metadata     Json?
+  createdAt    DateTime     @default(now())
+  case         SocCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId])
+}
+
+model SocCaseIoc {
+  id          String   @id @default(uuid())
+  caseId      String
+  indicator   String
+  type        IocType
+  reputation  IocRep   @default(UNKNOWN)
+  threatScore Int      @default(0)
+  vtResult    Json?
+  abuseResult Json?
+  gnResult    Json?
+  enrichedAt  DateTime?
+  firstSeen   DateTime?
+  lastSeen    DateTime?
+  addedById   String?
+  createdAt   DateTime @default(now())
+  case        SocCase  @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId, type])
+  @@index([indicator])
+}
+
+model SocCaseNote {
+  id         String   @id @default(uuid())
+  caseId     String
+  channel    String   @default("INTERNAL")
+  content    String
+  authorId   String
+  authorName String?
+  mentions   Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  case       SocCase  @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  author     User     @relation("SocCaseNoteAuthor", fields: [authorId], references: [id])
+
+  @@index([caseId, channel, createdAt])
+}
+
+model SocCaseAudit {
+  id        String   @id @default(uuid())
+  caseId    String
+  actorId   String?
+  actorName String?
+  actorIp   String?
+  action    String
+  details   Json?
+  createdAt DateTime @default(now())
+  case      SocCase  @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId, createdAt])
+}
+
+model SocCaseAsset {
+  id         String   @id @default(uuid())
+  caseId     String
+  name       String
+  type       String
+  riskLevel  String   @default("MEDIUM")
+  hostname   String?
+  ipAddress  String?
+  eventCount Int      @default(0)
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  case       SocCase  @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId])
+}
+
+model SocCaseUser {
+  id           String   @id @default(uuid())
+  caseId       String
+  userId       String?
+  email        String
+  name         String?
+  role         String?
+  riskScore    Int      @default(0)
+  failedLogins Int      @default(0)
+  mfaEnabled   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  case         SocCase  @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId])
+}
+
+model SocCaseRelated {
+  id            String   @id @default(uuid())
+  primaryCaseId String
+  relatedCaseId String
+  relationship  String
+  similarity    Int      @default(0)
+  createdAt     DateTime @default(now())
+  primaryCase   SocCase  @relation("PrimaryCase", fields: [primaryCaseId], references: [id], onDelete: Cascade)
+  relatedCase   SocCase  @relation("RelatedCase", fields: [relatedCaseId], references: [id], onDelete: Cascade)
+
+  @@unique([primaryCaseId, relatedCaseId])
+  @@index([primaryCaseId])
+}
+
+model SocPlaybook {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  description String?
+  category    String?
+  steps       Json
+  autoRun     Boolean          @default(false)
+  active      Boolean          @default(true)
+  runs        SocPlaybookRun[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model SocPlaybookRun {
+  id          String         @id @default(uuid())
+  caseId      String
+  playbookId  String
+  status      PlaybookStatus @default(IDLE)
+  currentStep Int            @default(0)
+  stepResults Json?
+  startedById String?
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdAt   DateTime       @default(now())
+  case        SocCase        @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  playbook    SocPlaybook    @relation(fields: [playbookId], references: [id])
+  startedBy   User?          @relation("SocPlaybookRunStarter", fields: [startedById], references: [id])
+
+  @@index([caseId, status])
+}
+
+model SocResponseAction {
+  id           String         @id @default(uuid())
+  caseId       String
+  actionType   String
+  target       String?
+  reason       String?
+  status       ResponseStatus @default(PENDING)
+  executedById String?
+  executedAt   DateTime?
+  result       Json?
+  createdAt    DateTime       @default(now())
+  case         SocCase        @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  executedBy   User?          @relation("SocResponseActionExecutor", fields: [executedById], references: [id])
+
+  @@index([caseId, status])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LOG COLLECTION & SIEM MODELS
+// ─────────────────────────────────────────────────────────────────────────────
+
+model SocLog {
+  id        String    @id @default(uuid())
+  source    LogSource @default(APPLICATION)
+  level     LogLevel  @default(INFO)
+  message   String
+  hostname  String?
+  service   String?
+  ip        String?
+  userId    String?
+  sessionId String?
+  requestId String?
+  eventType String?
+  rawData   Json?
+  tags      Json?
+  createdAt DateTime  @default(now())
+
+  @@index([source, level, createdAt])
+  @@index([createdAt])
+  @@index([ip, createdAt])
+  @@index([userId, createdAt])
+  @@index([eventType, createdAt])
+}
+
+model SiemConfig {
+  id                String   @id @default("singleton")
+  enabled           Boolean  @default(false)
+  sources           Json?
+  alertThreshold    Int      @default(10)
+  enrichmentEnabled Boolean  @default(false)
+  vtApiKey          String?
+  abuseApiKey       String?
+  gnApiKey          String?
+  edrWebhookUrl     String?
+  edrWebhookSecret  String?
+  retentionDays     Int      @default(90)
+  updatedById       String?
+  updatedAt         DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  updatedBy         User?    @relation("SiemConfigUpdater", fields: [updatedById], references: [id])
+}
+
+model LogCollectionSource {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  type       String
+  enabled    Boolean  @default(true)
+  endpoint   String?
+  apiKey     String?
+  format     String   @default("json")
+  filters    Json?
+  lastSeenAt DateTime?
+  eventCount Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NEW ENUMS
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum CaseSeverity {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+  INFORMATIONAL
+}
+
+enum CasePriority {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum CaseStatus {
+  OPEN
+  IN_PROGRESS
+  ON_HOLD
+  RESOLVED
+  CLOSED
+}
+
+enum IocType {
+  IP
+  DOMAIN
+  URL
+  HASH_SHA256
+  EMAIL
+  FILE
+  PROCESS
+  REGISTRY
+}
+
+enum IocRep {
+  MALICIOUS
+  SUSPICIOUS
+  CLEAN
+  UNKNOWN
+}
+
+enum EvidenceType {
+  FILE
+  MEMORY_DUMP
+  EMAIL
+  PCAP
+  SCRIPT
+  REGISTRY
+  LOG
+  SCREENSHOT
+}
+
+enum PlaybookStatus {
+  IDLE
+  RUNNING
+  COMPLETED
+  FAILED
+  PAUSED
+}
+
+enum ResponseStatus {
+  PENDING
+  EXECUTED
+  FAILED
+  CANCELLED
+}
+
+enum LogLevel {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+  CRITICAL
+}
+
+enum LogSource {
+  SIEM
+  FIREWALL
+  WAF
+  API_GATEWAY
+  APPLICATION
+  ENDPOINT
+  CLOUD
+  NETWORK
+}
+

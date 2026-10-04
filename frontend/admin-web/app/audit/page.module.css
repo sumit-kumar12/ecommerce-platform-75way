@@ -1,0 +1,18 @@
+.pageRoot {
+  --primary: #8B5CF6;
+  --background-light: #f6f6f8;
+  --background-dark: #0F0E17;
+}
+
+.glassRow {
+  transition: all 0.2s;
+}
+.glassRow:hover {
+  background-color: rgba(139, 92, 246, 0.08);
+  backdrop-filter: blur(4px);
+}
+
+.monospacedGrid {
+  font-family: 'JetBrains Mono', monospace;
+}
+

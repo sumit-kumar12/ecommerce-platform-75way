@@ -1,0 +1,92 @@
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  padding: 0.75rem 0.85rem;
+  text-align: left;
+  color: #7f93ae;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 0.78rem 0.85rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+  color: #dbe4f0;
+  font-size: 0.79rem;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.row,
+.rowSelected {
+  cursor: pointer;
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.rowSelected {
+  background: rgba(139, 92, 246, 0.14);
+}
+
+.eventCell {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.eventCell strong {
+  color: #f8fafc;
+  font-size: 0.82rem;
+}
+
+.eventCell small {
+  color: #8ca0bc;
+  font-size: 0.7rem;
+}
+
+.loadingBar {
+  display: block;
+  height: 0.74rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(167, 139, 250, 0.18), rgba(255, 255, 255, 0.08));
+  background-size: 200% 100%;
+  animation: shimmer 1.1s linear infinite;
+}
+
+.emptyCell {
+  text-align: center;
+  color: #94a3b8;
+}
+
+.mono,
+.monoSmall {
+  font-family: Consolas, "Courier New", monospace;
+}
+
+.monoSmall {
+  color: #94a3b8;
+  font-size: 0.68rem;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}
+

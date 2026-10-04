@@ -1,0 +1,167 @@
+.headerPrompt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+
+.headerLink,
+.inlineLink {
+  color: #9fb2ff;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.headerLink:hover,
+.inlineLink:hover {
+  color: #c7d2fe;
+}
+
+.form {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.passwordGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.strengthWrap {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.strengthHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.76rem;
+}
+
+.strengthLabel {
+  color: #94a3b8;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.strengthValue {
+  color: #9fb2ff;
+  font-weight: 700;
+}
+
+.strengthBars {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.3rem;
+  height: 0.4rem;
+}
+
+.strengthBar,
+.strengthBarActive {
+  border-radius: 9999px;
+}
+
+.strengthBar {
+  background: rgba(71, 85, 105, 0.72);
+}
+
+.strengthBarActive {
+  background: linear-gradient(90deg, #8B5CF6 0%, #7c73ff 100%);
+}
+
+.notice,
+.errorBanner {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.notice {
+  border: 1px solid rgba(139, 92, 246, 0.14);
+  background: rgba(139, 92, 246, 0.05);
+  color: #cbd5e1;
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+
+.notice p {
+  margin: 0;
+}
+
+.notice :global(.material-symbols-outlined) {
+  color: #9fb2ff;
+  font-size: 1.1rem;
+}
+
+.errorBanner {
+  border: 1px solid rgba(248, 113, 113, 0.24);
+  background: rgba(127, 29, 29, 0.22);
+  color: #fecaca;
+  font-size: 0.88rem;
+}
+
+.errorBanner :global(.material-symbols-outlined) {
+  font-size: 1.1rem;
+}
+
+.submitButton {
+  width: 100%;
+  min-height: 3.45rem;
+  margin-top: 0.25rem;
+  border-radius: 1rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.complianceRow {
+  margin-top: 0.4rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid rgba(139, 92, 246, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem 1.4rem;
+  opacity: 0.62;
+}
+
+.complianceItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #94a3b8;
+  font-size: 0.64rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.complianceItem :global(.material-symbols-outlined) {
+  font-size: 0.95rem;
+}
+
+.footerCopy {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .headerPrompt {
+    display: none;
+  }
+
+  .passwordGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

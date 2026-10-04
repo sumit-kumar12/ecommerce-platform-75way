@@ -1,0 +1,40 @@
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  background: #1A1A2E;
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(139, 92, 246, 0.3);
+  color: #ffffff;
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.linkActive {
+  border-color: #8B5CF6;
+  color: #ffffff;
+  background: rgba(139, 92, 246, 0.15);
+}
+
+.icon {
+  font-size: 1.1rem;
+  color: #8B5CF6;
+}
+
+

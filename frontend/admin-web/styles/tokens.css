@@ -1,0 +1,20 @@
+@theme {
+  --font-sans: "Inter", var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", var(--font-space-grotesk), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary: #8B5CF6;
+  --color-primary-deep: #4f46e5;
+  --color-primary-bright: #2563eb;
+  --color-background-dark: #0F0E17;
+  --color-background-light: #f8f9fb;
+  --color-surface: #172033;
+  --color-surface-dark: #0F0E17;
+  --color-surface-elevated: #1e293b;
+  --color-accent-neon: #00f2ff;
+
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 1.75rem;
+}
+

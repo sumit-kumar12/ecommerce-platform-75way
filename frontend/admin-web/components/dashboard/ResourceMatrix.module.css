@@ -1,0 +1,110 @@
+.container {
+  overflow: hidden;
+}
+
+.header {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.body {
+  padding: 1rem 1.5rem;
+}
+
+.title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.625rem;
+  font-family: monospace;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.bgSuccess { background-color: #22c55e; }
+.bgWarning { background-color: #eab308; }
+.bgDanger { background-color: #ef4444; }
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  text-align: left;
+  font-family: monospace;
+  font-size: 0.75rem;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background: rgba(15, 14, 23, 0.3);
+  color: #64748b;
+}
+
+.table th {
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid rgba(139, 92, 246, 0.05);
+  transition: background-color 0.2s;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(139, 92, 246, 0.05);
+}
+
+.table td {
+  padding: 1rem 1.5rem;
+}
+
+.nodeId { color: #e2e8f0; }
+.nodeType { color: #94a3b8; }
+.nodeMeta { color: #94a3b8; }
+
+.progressWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progressBar {
+  flex: 1;
+  background: #1e293b;
+  height: 0.25rem;
+  border-radius: 0.125rem;
+  overflow: hidden;
+  min-width: 60px;
+}
+
+.progressFill {
+  height: 100%;
+}
+
+.success { color: #22c55e; background-color: #22c55e; }
+.warning { color: #eab308; background-color: #eab308; }
+.danger { color: #ef4444; background-color: #ef4444; }
+

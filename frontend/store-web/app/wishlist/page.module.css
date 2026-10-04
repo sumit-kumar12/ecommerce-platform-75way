@@ -1,0 +1,345 @@
+.pageWrap {
+  position: relative;
+  z-index: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 2.75rem 1.5rem 4rem;
+  background-image: radial-gradient(circle at 2px 2px, rgba(139, 92, 246, 0.05) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.heroCopy {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.breadcrumbs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.25rem;
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.breadcrumbs span:last-child {
+  color: #8b83ff;
+}
+
+.breadcrumbs :global(.material-symbols-outlined) {
+  font-size: 0.95rem;
+}
+
+.heroCopy h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 4.7rem);
+  line-height: 0.96;
+  letter-spacing: -0.05em;
+  color: #f8fafc;
+}
+
+.heroCopy p {
+  margin: 0;
+  max-width: 38rem;
+  color: #94a3b8;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.secondaryAction,
+.primaryAction,
+.primaryActionLink,
+.secondaryActionLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 3rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.85rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: transform 0.2s ease, filter 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.secondaryAction,
+.secondaryActionLink {
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: transparent;
+  color: #e2e8f0;
+}
+
+.primaryAction,
+.primaryActionLink {
+  border: 0;
+  background: linear-gradient(135deg, #8B5CF6, #6f5ef7);
+  color: #fff;
+  box-shadow: 0 18px 36px -22px rgba(139, 92, 246, 0.7);
+}
+
+.secondaryAction:disabled,
+.primaryAction:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.notice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(26, 24, 39, 0.8);
+  color: #e2e8f0;
+}
+
+.noticePositive {
+  border-color: rgba(74, 222, 128, 0.24);
+  color: #bbf7d0;
+}
+
+.noticeWarning {
+  border-color: rgba(251, 191, 36, 0.24);
+  color: #fde68a;
+}
+
+.noticeCritical {
+  border-color: rgba(248, 113, 113, 0.24);
+  color: #fecaca;
+}
+
+.filterRow {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.6rem;
+  overflow-x: auto;
+  padding-bottom: 0.15rem;
+  scrollbar-width: none;
+}
+
+.filterRow::-webkit-scrollbar {
+  display: none;
+}
+
+.filterChip {
+  flex: 0 0 auto;
+  padding: 0.78rem 1.15rem;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba(139, 92, 246, 0.1);
+  color: #e2e8f0;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.filterChipActive {
+  background: #8B5CF6;
+  color: #fff;
+}
+
+.statBar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.85rem;
+}
+
+.statCard {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.statCard span {
+  color: #94a3b8;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.statCard strong {
+  color: #f8fafc;
+  font-size: 1.3rem;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.8rem;
+}
+
+.skeletonCard {
+  min-height: 25rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  background: linear-gradient(90deg, rgba(30, 41, 59, 0.82), rgba(51, 65, 85, 0.34), rgba(30, 41, 59, 0.82));
+  background-size: 220% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.addCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  border: 2px dashed rgba(139, 92, 246, 0.2);
+  border-radius: 1.25rem;
+  padding: 2rem;
+  text-align: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.addCard:hover {
+  background: rgba(139, 92, 246, 0.05);
+  transform: translateY(-2px);
+}
+
+.addCircle {
+  width: 4rem;
+  height: 4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  border-radius: 9999px;
+  background: rgba(139, 92, 246, 0.1);
+  color: #7c73ff;
+}
+
+.addCircle :global(.material-symbols-outlined) {
+  font-size: 2rem;
+}
+
+.addCard h3 {
+  margin: 0 0 0.35rem;
+  color: #f8fafc;
+  font-size: 1.15rem;
+}
+
+.addCard p {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.emptyPanel {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  border-radius: 1.25rem;
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.emptyIcon {
+  font-size: 3.75rem;
+  color: #8b83ff;
+}
+
+.emptyPanel h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: #f8fafc;
+}
+
+.emptyPanel p {
+  margin: 0;
+  max-width: 38rem;
+  color: #94a3b8;
+  line-height: 1.7;
+}
+
+.emptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.85rem;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (max-width: 1260px) {
+  .cardGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .statBar {
+    grid-template-columns: 1fr;
+  }
+
+  .cardGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .pageWrap {
+    padding: 2rem 1rem 3rem;
+  }
+
+  .heroActions,
+  .emptyActions {
+    width: 100%;
+  }
+
+  .secondaryAction,
+  .primaryAction,
+  .primaryActionLink,
+  .secondaryActionLink {
+    width: 100%;
+  }
+
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

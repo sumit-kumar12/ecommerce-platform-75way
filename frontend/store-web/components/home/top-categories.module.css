@@ -1,0 +1,94 @@
+.categoriesSection {
+  margin: 40px auto;
+  padding: 32px;
+  background: #1A1A2E;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.viewAllBtn {
+  color: #a78bfa;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.2s ease;
+}
+
+.viewAllBtn:hover {
+  opacity: 0.8;
+}
+
+.categoriesGrid {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.categoriesGrid::-webkit-scrollbar {
+  display: none;
+}
+
+.categoryItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  min-width: 80px;
+}
+
+.iconCircle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #16213E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c084fc;
+  border: 1px solid rgba(140, 99, 245, 0.2);
+  transition: all 0.3s ease;
+}
+
+.iconCircle span {
+  font-size: 32px;
+}
+
+.categoryItem:hover .iconCircle {
+  transform: translateY(-4px);
+  background: rgba(140, 99, 245, 0.1);
+  border-color: rgba(140, 99, 245, 0.5);
+  box-shadow: 0 8px 24px rgba(140, 99, 245, 0.2);
+}
+
+.categoryName {
+  font-size: 13px;
+  font-weight: 500;
+  color: #94a3b8;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.categoryItem:hover .categoryName {
+  color: #fff;
+}
+

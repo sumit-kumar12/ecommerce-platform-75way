@@ -1,0 +1,73 @@
+.badgesWrapper {
+  margin-bottom: 3rem;
+}
+
+.badgesGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.badgeCard {
+  background: rgba(22, 33, 62, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  backdrop-filter: blur(10px);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.badgeCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(140, 99, 245, 0.3);
+}
+
+.iconWrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(140, 99, 245, 0.1);
+  color: #8C63F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconWrap span {
+  font-size: 24px;
+}
+
+.textWrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.textWrap strong {
+  color: #FFFFFF;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.textWrap small {
+  color: #94A3B8;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 1024px) {
+  .badgesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .badgesGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+

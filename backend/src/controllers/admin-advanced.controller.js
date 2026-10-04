@@ -1,0 +1,1852 @@
+import { z } from "zod";
+import { prisma } from "../config/prisma.js";
+import { redis } from "../config/redis.js";
+import { ROLES } from "../config/constants.js";
+import { AppError } from "../errors/app-error.js";
+import { writeAuditLog } from "../services/audit.service.js";
+import {
+  createHoneypotTrap,
+  deactivateHoneypotTrap,
+  getEmergencyConfig,
+  getGlobalLockoutState,
+  countActiveSessions,
+  listActiveSessions,
+  listHoneypotTraps,
+  listRolePolicies,
+  revokeAllSessions,
+  revokeSessionById,
+  setGlobalLockoutState,
+  supportedRolePermissions,
+  updateEmergencyConfig,
+  updateRolePolicy,
+} from "../services/admin-control.service.js";
+import { notifySecurityEscalation } from "../services/notification.service.js";
+import { enforceProductPaymentRules } from "../services/product.service.js";
+import {
+  createProductImage,
+  deleteProductImage,
+  setPrimaryProductImage,
+} from "../services/product-media.service.js";
+import { parseMoneyToPaise, paiseToDecimalString } from "../utils/money.js";
+import { buildProductMediaAbsoluteUrl } from "../utils/product-media.js";
+import { sanitizeText } from "../utils/sanitize.js";
+
+const ROLE_VALUES = Object.values(ROLES);
+
+const orderStatusMap = {
+  PENDING: "PENDING_PAYMENT",
+  PENDING_PAYMENT: "PENDING_PAYMENT",
+  PAID: "PAID",
+  PROCESSING: "PROCESSING",
+  SHIPPED: "SHIPPED",
+  DELIVERED: "DELIVERED",
+  CANCELLED: "CANCELLED",
+  REFUNDED: "REFUNDED",
+  RETURNED: "RETURNED",
+};
+
+const dbStatusToUi = (status) => (status === "PENDING_PAYMENT" ? "PENDING" : status);
+const uiStatusToDb = (status) => orderStatusMap[String(status ?? "").toUpperCase()];
+
+const userPatchSchema = z
+  .object({
+    banned: z.boolean().optional(),
+    role: z.enum(ROLE_VALUES).optional(),
+  })
+  .refine((payload) => payload.banned !== undefined || payload.role !== undefined, {
+    message: "At least one field must be provided.",
+  });
+
+const lockoutActionSchema = z.object({
+  action: z.enum(["lock", "unlock"]),
+  reason: z.string().min(3).max(200).optional(),
+});
+
+const incidentCreateSchema = z.object({
+  title: z.string().min(3).max(160),
+  description: z.string().min(3).max(4000),
+  severity: z.enum(["INFO", "LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+});
+
+const incidentUpdateSchema = z.object({
+  status: z.enum(["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"]).optional(),
+  description: z.string().min(1).max(10000).optional(),
+});
+
+const trapCreateSchema = z.object({
+  path: z.string().min(2).max(200),
+  type: z.string().min(2).max(40),
+});
+
+const emergencyBroadcastSchema = z.object({
+  enabled: z.boolean().optional(),
+  channels: z.array(z.enum(["email", "sms", "push", "slack", "webhook"])).min(1),
+  severity: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+  message: z.string().min(3).max(2000),
+  recipients: z.array(z.string().min(3).max(160)).max(200),
+});
+
+const rolePolicySchema = z.object({
+  permissions: z.array(z.string().min(3).max(80)).max(500),
+});
+
+const toProductSlug = (value) =>
+  sanitizeText(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const optionalSlugSchema = z.preprocess(
+  (value) => (typeof value === "string" && !value.trim() ? undefined : value),
+  z.string().min(3).max(180).optional(),
+);
+
+const productCreateSchema = z.object({
+  name: z.string().min(3).max(150),
+  slug: optionalSlugSchema,
+  shortDescription: z.string().max(220).optional(),
+  description: z.string().min(10).max(5000),
+  seoTitle: z.string().max(160).optional(),
+  seoDescription: z.string().max(320).optional(),
+  price: z.coerce.number().positive(),
+  stockQuantity: z.coerce.number().int().min(0).default(0),
+  categoryId: z.string().uuid(),
+  isDigital: z.boolean().optional().default(false),
+  paymentOnlineOnly: z.boolean().optional().default(false),
+  paymentAllowCOD: z.boolean().optional().default(true),
+  paymentMinCODPrice: z.union([z.coerce.number().positive(), z.null()]).optional(),
+  compareAtPrice: z.union([z.coerce.number().positive(), z.null()]).optional(),
+});
+
+const productPatchSchema = z
+  .object({
+    name: z.string().min(3).max(150).optional(),
+    slug: optionalSlugSchema,
+    shortDescription: z.string().max(220).optional(),
+    description: z.string().min(10).max(5000).optional(),
+    seoTitle: z.string().max(160).optional(),
+    seoDescription: z.string().max(320).optional(),
+    categoryId: z.string().uuid().optional(),
+    price: z.coerce.number().positive().optional(),
+    stockQuantity: z.coerce.number().int().min(0).optional(),
+    isActive: z.boolean().optional(),
+    isDigital: z.boolean().optional(),
+    paymentOnlineOnly: z.boolean().optional(),
+    paymentAllowCOD: z.boolean().optional(),
+    paymentMinCODPrice: z.union([z.coerce.number().positive(), z.null()]).optional(),
+    compareAtPrice: z.union([z.coerce.number().positive(), z.null()]).optional(),
+  })
+  .refine(
+    (payload) =>
+      Object.values(payload).some((value) => value !== undefined),
+    {
+      message: "At least one field must be provided.",
+    },
+  );
+
+const productImageCreateSchema = z.object({
+  imageBase64: z.string().min(64).max(8_000_000),
+  mimeType: z.string().min(8).max(40).optional(),
+  originalName: z.string().min(1).max(160).optional(),
+  altText: z.string().max(160).optional(),
+  caption: z.string().max(240).optional(),
+  isPrimary: z.boolean().optional(),
+  sortOrder: z.coerce.number().int().min(0).max(100_000).optional(),
+});
+
+const productIdParamSchema = z.object({
+  productId: z.string().uuid(),
+});
+
+const productImageParamSchema = z.object({
+  productId: z.string().uuid(),
+  imageId: z.string().uuid(),
+});
+
+const adminProductInclude = {
+  category: true,
+  variants: { where: { isActive: true }, orderBy: { createdAt: "asc" } },
+  images: { orderBy: [{ isPrimary: "desc" }, { sortOrder: "asc" }, { createdAt: "asc" }] },
+};
+
+const toOptionalDecimalString = (value, fieldName) =>
+  value === undefined || value === null ? null : paiseToDecimalString(parseMoneyToPaise(value, fieldName));
+
+const normalizeOptionalText = (value, maxLength) => {
+  if (value === undefined) return undefined;
+  const normalized = sanitizeText(value);
+  if (!normalized) return null;
+  return normalized.slice(0, maxLength);
+};
+
+const resolveProductSlug = async ({ productId = null, name, slug, fallbackSlug = null }) => {
+  const nextSlug = toProductSlug(slug || fallbackSlug || name || "");
+  if (!nextSlug) return null;
+
+  const existing = await prisma.product.findFirst({
+    where: {
+      slug: nextSlug,
+      ...(productId ? { id: { not: productId } } : {}),
+    },
+    select: { id: true },
+  });
+
+  if (existing) {
+    throw new AppError("Product slug already exists.", 409, "PRODUCT_SLUG_ALREADY_EXISTS");
+  }
+
+  return nextSlug;
+};
+
+const serializeProductImage = (req, image) => ({
+  id: image.id,
+  url: buildProductMediaAbsoluteUrl({ req, storageKey: image.storageKey }),
+  isPrimary: image.isPrimary,
+  altText: image.altText,
+  caption: image.caption,
+  sortOrder: image.sortOrder,
+  mimeType: image.mimeType,
+  sizeBytes: image.sizeBytes,
+});
+
+const serializeAdminProduct = (req, product) => {
+  const images = (product.images ?? []).map((image) => serializeProductImage(req, image));
+  const primaryImage = images.find((image) => image.isPrimary) ?? images[0] ?? null;
+
+  return {
+    id: product.id,
+    name: product.name,
+    slug: product.slug,
+    shortDescription: product.shortDescription,
+    description: product.description,
+    seoTitle: product.seoTitle,
+    seoDescription: product.seoDescription,
+    isActive: product.isActive,
+    isDigital: product.isDigital,
+    paymentOnlineOnly: product.paymentOnlineOnly,
+    paymentAllowCOD: product.paymentAllowCOD,
+    paymentMinCODPrice:
+      product.paymentMinCODPrice === null || product.paymentMinCODPrice === undefined
+        ? null
+        : Number(product.paymentMinCODPrice),
+    category: product.category,
+    price: product.variants[0] ? Number(product.variants[0].price) : 0,
+    compareAtPrice: product.variants[0]?.compareAtPrice ? Number(product.variants[0].compareAtPrice) : null,
+    stockQuantity: product.variants.reduce((sum, variant) => sum + variant.stock, 0),
+    variantId: product.variants[0]?.id ?? null,
+    images,
+    thumbnailImageUrl: primaryImage?.url ?? null,
+  };
+};
+
+const getAdminProductById = async (productId) =>
+  prisma.product.findUnique({
+    where: { id: productId },
+    include: adminProductInclude,
+  });
+
+export const adminStatsController = async (req, res) => {
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const [users, activeUsers, orders, products, threats, activeCategories, inactiveCategories, subcategories, abandonedCarts] = await Promise.all([
+    prisma.user.count(),
+    prisma.user.count({ where: { isActive: true } }),
+    prisma.order.count(),
+    prisma.product.count({ where: { isActive: true } }),
+    prisma.threatEvent.count({ where: { createdAt: { gte: since } } }),
+    prisma.category.count({ where: { isActive: true, parentId: null } }),
+    prisma.category.count({ where: { isActive: false } }),
+    prisma.category.count({ where: { parentId: { not: null }, isActive: true } }),
+    prisma.cart.count({ where: { items: { some: {} } } }),
+  ]);
+
+  const conversionRate = (orders + abandonedCarts) > 0 ? (orders / (orders + abandonedCarts)) * 100 : 0;
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "ADMIN_STATS_READ",
+    targetType: "ADMIN_STATS",
+    targetId: "GLOBAL",
+    details: { users, activeUsers, orders, products, threats, activeCategories, inactiveCategories, subcategories },
+  });
+
+  res.status(200).json({
+    users,
+    activeUsers,
+    orders,
+    totalOrders: orders,
+    products,
+    totalProducts: products,
+    recentThreatEvents: threats,
+    blockedIps: await prisma.iPBlock.count({ where: { blockedUntil: { gt: new Date() } } }),
+    activeCategories,
+    inactiveCategories,
+    activeSubcategories: subcategories,
+    abandonedCarts,
+    conversionRate: conversionRate.toFixed(2),
+  });
+};
+
+export const adminUsersPatchController = async (req, res) => {
+  const { userId } = z.object({ userId: z.string().uuid() }).parse(req.params);
+  const input = userPatchSchema.parse(req.body);
+
+  const target = await prisma.user.findUnique({ where: { id: userId } });
+  if (!target) throw new AppError("User not found.", 404, "USER_NOT_FOUND");
+  if (target.id === req.user.id && input.banned === true) {
+    throw new AppError("Admin cannot ban themselves.", 400, "SELF_BAN_FORBIDDEN");
+  }
+
+  const updated = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      ...(input.banned !== undefined
+        ? {
+            isActive: !input.banned,
+            lockedUntil: input.banned ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) : null,
+          }
+        : {}),
+      ...(input.role ? { role: input.role } : {}),
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      isActive: true,
+      createdAt: true,
+      lockedUntil: true,
+    },
+  });
+  await redis.del(`user-cache:${userId}`);
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "ADMIN_USER_PATCH",
+    targetType: "USER",
+    targetId: userId,
+    details: input,
+  });
+
+  res.status(200).json({
+    user: {
+      ...updated,
+      banned: !updated.isActive,
+    },
+  });
+};
+
+export const adminOrdersListController = async (req, res) => {
+  const query = z
+    .object({
+      page: z.coerce.number().int().min(1).default(1),
+      limit: z.coerce.number().int().min(1).max(100).default(20),
+      status: z.string().optional(),
+      search: z.string().max(120).optional(),
+      paymentMethod: z.string().optional(),
+      paymentStatus: z.string().optional(),
+    })
+    .parse(req.query);
+
+  const dbStatus = query.status ? uiStatusToDb(query.status) : null;
+  const where = {
+    ...(dbStatus ? { status: dbStatus } : {}),
+    ...(query.paymentMethod ? { paymentMethod: query.paymentMethod } : {}),
+    ...(query.paymentStatus ? { paymentStatus: query.paymentStatus } : {}),
+    ...(query.search
+      ? {
+          OR: [
+            { orderNumber: { contains: query.search, mode: "insensitive" } },
+            { user: { email: { contains: query.search, mode: "insensitive" } } },
+            { user: { name: { contains: query.search, mode: "insensitive" } } },
+          ],
+        }
+      : {}),
+  };
+
+  const baseWhere = {
+    ...(query.paymentMethod ? { paymentMethod: query.paymentMethod } : {}),
+    ...(query.paymentStatus ? { paymentStatus: query.paymentStatus } : {}),
+    ...(query.search
+      ? {
+          OR: [
+            { orderNumber: { contains: query.search, mode: "insensitive" } },
+            { user: { email: { contains: query.search, mode: "insensitive" } } },
+            { user: { name: { contains: query.search, mode: "insensitive" } } },
+          ],
+        }
+      : {}),
+  };
+
+  const [total, orders, statusGroups] = await Promise.all([
+    prisma.order.count({ where }),
+    prisma.order.findMany({
+      where,
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        items: { select: { id: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      skip: (query.page - 1) * query.limit,
+      take: query.limit,
+    }),
+    prisma.order.groupBy({
+      by: ['status'],
+      where: baseWhere,
+      _count: { id: true },
+    }),
+  ]);
+
+  const counts = {
+    All: statusGroups.reduce((acc, curr) => acc + curr._count.id, 0),
+    Pending: statusGroups.filter(g => ["PENDING_PAYMENT", "PENDING"].includes(g.status)).reduce((acc, curr) => acc + curr._count.id, 0),
+    Processing: statusGroups.find(g => g.status === 'PROCESSING')?._count.id || 0,
+    Shipped: statusGroups.find(g => g.status === 'SHIPPED')?._count.id || 0,
+    Delivered: statusGroups.find(g => g.status === 'DELIVERED')?._count.id || 0,
+  };
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "ADMIN_ORDERS_LIST",
+    targetType: "ORDER",
+    targetId: "*",
+    details: { total, page: query.page, limit: query.limit },
+  });
+
+  res.status(200).json({
+    total,
+    counts,
+    orders: orders.map((order) => ({
+      ...order,
+      status: dbStatusToUi(order.status),
+      customerName: order.user?.name ?? "Unknown",
+      itemCount: order.items.length,
+    })),
+  });
+};
+
+export const adminOrderGetController = async (req, res) => {
+  const { orderId } = z.object({ orderId: z.string().uuid() }).parse(req.params);
+
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: {
+      user: { select: { id: true, name: true, email: true } },
+      items: {
+        include: {
+          product: { select: { name: true, images: { take: 1 } } }
+        }
+      },
+    },
+  });
+
+  if (!order) {
+    throw new AppError("Order not found.", 404, "NOT_FOUND");
+  }
+
+  res.status(200).json({
+    order: {
+      ...order,
+      status: dbStatusToUi(order.status),
+      customerName: order.user.name,
+      customerEmail: order.user.email,
+      items: order.items.map(i => ({
+        ...i,
+        productName: i.product?.name,
+        price: i.unitPrice
+      }))
+    }
+  });
+};
+
+export const adminOrderPatchController = async (req, res) => {
+  const { orderId } = z.object({ orderId: z.string().uuid() }).parse(req.params);
+  const { status } = z.object({ status: z.string().min(3).max(40) }).parse(req.body);
+  const dbStatus = uiStatusToDb(status);
+  if (!dbStatus) throw new AppError("Invalid order status.", 400, "INVALID_ORDER_STATUS");
+
+  const updated = await prisma.order.update({
+    where: { id: orderId },
+    data: { status: dbStatus },
+  });
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "ADMIN_ORDER_STATUS_UPDATE",
+    targetType: "ORDER",
+    targetId: orderId,
+    details: { previousStatus: updated.status, newStatus: dbStatus },
+  });
+
+  res.status(200).json({
+    order: {
+      ...updated,
+      status: dbStatusToUi(updated.status),
+    },
+  });
+};
+
+export const adminOrdersExportController = async (req, res) => {
+  const query = z
+    .object({
+      status: z.string().optional(),
+      search: z.string().max(120).optional(),
+      paymentMethod: z.string().optional(),
+      paymentStatus: z.string().optional(),
+    })
+    .parse(req.query);
+
+  const dbStatus = query.status ? uiStatusToDb(query.status) : null;
+  const where = {
+    ...(dbStatus ? { status: dbStatus } : {}),
+    ...(query.paymentMethod ? { paymentMethod: query.paymentMethod } : {}),
+    ...(query.paymentStatus ? { paymentStatus: query.paymentStatus } : {}),
+    ...(query.search
+      ? {
+          OR: [
+            { orderNumber: { contains: query.search, mode: "insensitive" } },
+            { user: { email: { contains: query.search, mode: "insensitive" } } },
+            { user: { name: { contains: query.search, mode: "insensitive" } } },
+          ],
+        }
+      : {}),
+  };
+
+  const orders = await prisma.order.findMany({
+    where,
+    include: {
+      user: { select: { name: true, email: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const headers = ["Order ID", "Date", "Customer Name", "Customer Email", "Amount", "Payment Method", "Status"];
+  const rows = orders.map((o) => [
+    o.orderNumber || o.id,
+    new Date(o.createdAt).toISOString(),
+    o.user?.name || "Guest",
+    o.user?.email || "N/A",
+    o.totalAmount,
+    o.paymentMethod,
+    dbStatusToUi(o.status),
+  ]);
+
+  const csvContent = [
+    headers.join(","),
+    ...rows.map((row) => row.map((field) => `"${String(field).replace(/"/g, '""')}"`).join(",")),
+  ].join("\n");
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "ADMIN_ORDERS_EXPORT",
+    targetType: "ORDER",
+    targetId: "*",
+    details: { count: orders.length },
+  });
+
+  res.setHeader("Content-Type", "text/csv");
+  res.setHeader("Content-Disposition", 'attachment; filename="orders-export.csv"');
+  res.status(200).send(csvContent);
+};
+
+export const adminOrderFulfillController = async (req, res) => {
+  const { orderId } = z.object({ orderId: z.string().uuid() }).parse(req.params);
+  const input = z.object({ 
+    trackingNumber: z.string().min(1).max(100),
+    shippingCarrier: z.string().min(1).max(100)
+  }).parse(req.body);
+
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
+  if (!order) throw new AppError("Order not found.", 404, "NOT_FOUND");
+
+  const updated = await prisma.order.update({
+    where: { id: orderId },
+    data: { 
+      status: "SHIPPED",
+      trackingNumber: input.trackingNumber,
+      shippingCarrier: input.shippingCarrier
+    },
+  });
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "ADMIN_ORDER_FULFILL",
+    targetType: "ORDER",
+    targetId: orderId,
+    details: { trackingNumber: input.trackingNumber, shippingCarrier: input.shippingCarrier },
+  });
+
+  res.status(200).json({
+    order: {
+      ...updated,
+      status: dbStatusToUi(updated.status),
+    },
+  });
+};
+
+export const adminOrderRefundController = async (req, res) => {
+  const { orderId } = z.object({ orderId: z.string().uuid() }).parse(req.params);
+  const input = z.object({ 
+    reason: z.string().min(1).max(500),
+  }).parse(req.body);
+
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
+  if (!order) throw new AppError("Order not found.", 404, "NOT_FOUND");
+
+  let newPaymentStatus = order.paymentStatus;
+  if (order.paymentStatus === "VERIFIED") {
+    newPaymentStatus = "REFUNDED";
+  }
+
+  const updated = await prisma.order.update({
+    where: { id: orderId },
+    data: { 
+      status: "REFUNDED",
+      paymentStatus: newPaymentStatus,
+      notes: order.notes ? `${order.notes}\nRefund reason: ${input.reason}` : `Refund reason: ${input.reason}`
+    },
+  });
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "ADMIN_ORDER_REFUND",
+    targetType: "ORDER",
+    targetId: orderId,
+    details: { reason: input.reason },
+  });
+
+  res.status(200).json({
+    order: {
+      ...updated,
+      status: dbStatusToUi(updated.status),
+    },
+  });
+};
+
+export const adminAuditListController = async (req, res) => {
+  const query = z
+    .object({
+      page: z.coerce.number().int().min(1).default(1),
+      limit: z.coerce.number().int().min(1).max(100).default(25),
+      event: z.string().max(120).optional(),
+      severity: z.enum(["INFO", "WARN", "CRITICAL"]).optional(),
+      search: z.string().max(120).optional(),
+    })
+    .parse(req.query);
+
+  const where = {
+    ...(query.event ? { action: { contains: query.event, mode: "insensitive" } } : {}),
+    ...(query.search
+      ? {
+          OR: [
+            { action: { contains: query.search, mode: "insensitive" } },
+            { targetType: { contains: query.search, mode: "insensitive" } },
+            { targetId: { contains: query.search, mode: "insensitive" } },
+            { actor: { email: { contains: query.search, mode: "insensitive" } } },
+          ],
+        }
+      : {}),
+  };
+
+  const [total, logs] = await Promise.all([
+    prisma.auditLog.count({ where }),
+    prisma.auditLog.findMany({
+      where,
+      include: { actor: { select: { id: true, email: true, name: true } } },
+      orderBy: { createdAt: "desc" },
+      skip: (query.page - 1) * query.limit,
+      take: query.limit,
+    }),
+  ]);
+
+  const severityOfAction = (action) => {
+    const normalized = String(action).toUpperCase();
+    if (normalized.includes("LOCKOUT") || normalized.includes("IP_BLOCK") || normalized.includes("EMERGENCY")) return "CRITICAL";
+    if (normalized.includes("DELETE") || normalized.includes("DEACTIVATE")) return "WARN";
+    return "INFO";
+  };
+
+  const entries = logs
+    .map((log) => {
+      const severity = severityOfAction(log.action);
+      return {
+        id: log.id,
+        timestamp: log.createdAt,
+        event: log.action,
+        severity,
+        actor: log.actor?.email ?? log.actorId,
+        ip: log.ip,
+        userAgent: log.userAgent,
+        metadata: log.details,
+        resource: `${log.targetType}:${log.targetId}`,
+        result: "OK",
+      };
+    })
+    .filter((entry) => (query.severity ? entry.severity === query.severity : true));
+
+  res.status(200).json({ logs: entries, total });
+};
+
+export const lockoutStatusController = async (req, res) => {
+  const [state, activeSessionCount] = await Promise.all([
+    getGlobalLockoutState(),
+    countActiveSessions(),
+  ]);
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "LOCKOUT_STATUS_READ",
+    targetType: "SECURITY_LOCKOUT",
+    targetId: "GLOBAL",
+    details: state,
+  });
+
+  res.status(200).json({
+    locked: state.locked,
+    lockedAt: state.lockedAt,
+    reason: state.reason,
+    activeSessions: activeSessionCount,
+  });
+};
+
+export const lockoutActionController = async (req, res) => {
+  const input = lockoutActionSchema.parse(req.body);
+
+  if (input.action === "lock") {
+    await setGlobalLockoutState({
+      locked: true,
+      reason: input.reason ?? "Manual emergency lockout by admin.",
+      actorId: req.user.id,
+    });
+    await revokeAllSessions({
+      reason: "Emergency lockout engaged by administrator.",
+      exceptUserId: req.user.id,
+    });
+  } else {
+    await setGlobalLockoutState({
+      locked: false,
+      reason: "Unlocked by administrator",
+      actorId: req.user.id,
+    });
+  }
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: input.action === "lock" ? "LOCKOUT_ENGAGED" : "LOCKOUT_RELEASED",
+    targetType: "SECURITY_LOCKOUT",
+    targetId: "GLOBAL",
+    details: { reason: input.reason ?? null },
+  });
+
+  res.status(200).json({ ok: true, locked: input.action === "lock" });
+};
+
+export const sessionsListController = async (req, res) => {
+  const { limit } = z.object({ limit: z.coerce.number().int().min(1).max(200).default(50) }).parse(req.query);
+  const sessions = await listActiveSessions({ limit });
+  res.status(200).json({
+    sessions: sessions.map((session) => ({
+      id: session.id,
+      userId: session.userId,
+      user: session.user,
+      ip: session.lastSeenIp ?? session.initialIp,
+      userAgent: session.lastSeenUserAgentHash ?? session.initialUserAgentHash,
+      deviceHash: session.review.deviceIdHash,
+      initialIp: session.review.initialIp,
+      lastSeenIp: session.review.lastSeenIp,
+      ipChanged: session.review.ipChanged,
+      initialUserAgentHash: session.review.initialUserAgentHash,
+      lastSeenUserAgentHash: session.review.lastSeenUserAgentHash,
+      userAgentChanged: session.review.userAgentChanged,
+      ageMinutes: session.review.ageMinutes,
+      idleMinutes: session.review.idleMinutes,
+      refreshTokenIssuedAt: session.review.refreshTokenIssuedAt,
+      refreshTokenExpiresAt: session.review.refreshTokenExpiresAt,
+      refreshTokenCreatedByIp: session.review.refreshTokenCreatedByIp,
+      riskFlags: session.review.riskFlags,
+      createdAt: session.createdAt,
+      lastSeenAt: session.lastSeenAt,
+      familyId: session.familyId,
+    })),
+  });
+};
+
+export const sessionsRevokeAllController = async (req, res) => {
+  await revokeAllSessions({
+    reason: "Bulk session termination by administrator.",
+    exceptUserId: req.user.id,
+  });
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "SESSIONS_REVOKE_ALL",
+    targetType: "SESSION",
+    targetId: "*",
+    details: {},
+  });
+  res.status(204).send();
+};
+
+export const sessionsRevokeOneController = async (req, res) => {
+  const { sessionId } = z.object({ sessionId: z.string().uuid() }).parse(req.params);
+  await revokeSessionById({
+    sessionId,
+    reason: "Session revoked by administrator.",
+  });
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "SESSION_REVOKE_ONE",
+    targetType: "SESSION",
+    targetId: sessionId,
+    details: {},
+  });
+  res.status(204).send();
+};
+
+export const incidentsListController = async (req, res) => {
+  const query = z.object({ status: z.enum(["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"]).optional() }).parse(req.query);
+  const incidents = await prisma.incident.findMany({
+    where: query.status ? { status: query.status } : {},
+    orderBy: { createdAt: "desc" },
+    take: 500,
+  });
+  res.status(200).json({ incidents });
+};
+
+export const incidentsCreateController = async (req, res) => {
+  const input = incidentCreateSchema.parse(req.body);
+  const incident = await prisma.incident.create({
+    data: {
+      title: input.title,
+      description: input.description,
+      severity: input.severity,
+      status: "OPEN",
+      createdById: req.user.id,
+      updatedById: req.user.id,
+    },
+  });
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "INCIDENT_CREATED",
+    targetType: "INCIDENT",
+    targetId: incident.id,
+    details: { severity: incident.severity },
+  });
+  res.status(201).json({ incident });
+};
+
+export const incidentsUpdateController = async (req, res) => {
+  const { incidentId } = z.object({ incidentId: z.string().uuid() }).parse(req.params);
+  const input = incidentUpdateSchema.parse(req.body);
+  const incident = await prisma.incident.update({
+    where: { id: incidentId },
+    data: {
+      status: input.status,
+      description: input.description,
+      updatedById: req.user.id,
+      updatedAt: new Date(),
+    },
+  });
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "INCIDENT_STATUS_UPDATED",
+    targetType: "INCIDENT",
+    targetId: incident.id,
+    details: { status: input.status },
+  });
+  res.status(200).json({ incident });
+};
+
+export const honeypotTrapsListController = async (_req, res) => {
+  const traps = await listHoneypotTraps();
+  res.status(200).json({ traps });
+};
+
+export const honeypotTrapsCreateController = async (req, res) => {
+  const input = trapCreateSchema.parse(req.body);
+  const trap = await createHoneypotTrap({
+    path: input.path,
+    type: input.type,
+    actorId: req.user.id,
+  });
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "HONEYPOT_TRAP_CREATED",
+    targetType: "HONEYPOT_TRAP",
+    targetId: trap.id,
+    details: { path: trap.path, type: trap.type },
+  });
+  res.status(201).json({ trap });
+};
+
+export const honeypotTrapsDeleteController = async (req, res) => {
+  const { trapId } = z.object({ trapId: z.string().uuid() }).parse(req.params);
+  await deactivateHoneypotTrap({ trapId });
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "HONEYPOT_TRAP_DEACTIVATED",
+    targetType: "HONEYPOT_TRAP",
+    targetId: trapId,
+    details: {},
+  });
+  res.status(204).send();
+};
+
+export const honeypotEventsListController = async (req, res) => {
+  const { limit } = z.object({ limit: z.coerce.number().int().min(1).max(200).default(50) }).parse(req.query);
+  const events = await prisma.threatEvent.findMany({
+    where: {
+      eventType: {
+        in: ["recon_attempt_blocked", "sql_pattern_detected", "xss_pattern_detected"],
+      },
+    },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+
+  res.status(200).json({
+    events: events.map((event) => ({
+      id: event.id,
+      trapPath: event.details?.path ?? event.details?.originalUrl ?? null,
+      path: event.details?.path ?? null,
+      ip: event.ip,
+      method: event.details?.method ?? "GET",
+      threatLevel: event.severity === "CRITICAL" ? "CRITICAL" : event.severity === "WARN" ? "HIGH" : "MEDIUM",
+      severity: event.severity === "WARN" ? "HIGH" : event.severity,
+      timestamp: event.createdAt,
+      eventType: event.eventType,
+    })),
+  });
+};
+
+export const complianceReportController = async (req, res) => {
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const [activePolicies, openIncidents, criticalThreats, certifiedCount] = await Promise.all([
+    prisma.compliancePolicy.count({ where: { status: "ACTIVE" } }),
+    prisma.incident.count({ where: { status: { in: ["OPEN", "IN_PROGRESS"] } } }),
+    prisma.threatEvent.count({ where: { createdAt: { gte: since }, severity: "CRITICAL" } }),
+    prisma.compliancePolicy.count({ where: { status: { in: ["ACTIVE", "REVIEW"] } } }),
+  ]);
+
+  const score = Math.max(0, Math.min(100, 100 - openIncidents * 7 - criticalThreats + activePolicies));
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "COMPLIANCE_REPORT_READ",
+    targetType: "COMPLIANCE",
+    targetId: "REPORT",
+    details: { score, activePolicies, openIncidents, criticalThreats },
+  });
+
+  res.status(200).json({
+    score,
+    certifiedCount,
+    openFindings: openIncidents,
+    activePolicies,
+    generatedAt: new Date().toISOString(),
+  });
+};
+
+export const compliancePoliciesController = async (_req, res) => {
+  const policies = await prisma.compliancePolicy.findMany({
+    orderBy: [{ status: "asc" }, { name: "asc" }],
+  });
+  res.status(200).json({ policies });
+};
+
+export const emergencyConfigController = async (_req, res) => {
+  const config = await getEmergencyConfig();
+  res.status(200).json({
+    enabled: Boolean(config?.enabled),
+    channels: Array.isArray(config?.channels) ? config.channels : ["email"],
+    severity: config?.defaultSeverity ?? "HIGH",
+    recipients: Array.isArray(config?.recipients) ? config.recipients.join(", ") : "",
+    message: "",
+  });
+};
+
+export const emergencyHistoryController = async (req, res) => {
+  const { limit } = z.object({ limit: z.coerce.number().int().min(1).max(100).default(20) }).parse(req.query);
+  const alerts = await prisma.emergencyAlert.findMany({
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+  res.status(200).json({
+    alerts: alerts.map((alert) => ({
+      id: alert.id,
+      severity: alert.severity,
+      message: alert.message,
+      sentAt: alert.createdAt,
+      status: alert.status,
+      channels: Array.isArray(alert.channels) ? alert.channels : [],
+      recipients: Array.isArray(alert.recipients) ? alert.recipients : [],
+    })),
+  });
+};
+
+export const emergencyBroadcastController = async (req, res) => {
+  const input = emergencyBroadcastSchema.parse(req.body);
+
+  await updateEmergencyConfig({
+    actorId: req.user.id,
+    config: {
+      enabled: Boolean(input.enabled ?? true),
+      channels: input.channels,
+      defaultSeverity: input.severity,
+      recipients: input.recipients,
+    },
+  });
+
+  await notifySecurityEscalation({
+    eventType: "EMERGENCY_BROADCAST",
+    severity: input.severity,
+    message: input.message,
+    details: {
+      actorId: req.user.id,
+      channels: input.channels,
+      recipients: input.recipients,
+    },
+  });
+
+  const alert = await prisma.emergencyAlert.create({
+    data: {
+      severity: input.severity,
+      message: input.message,
+      channels: input.channels,
+      recipients: input.recipients,
+      status: "SENT",
+      createdById: req.user.id,
+    },
+  });
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "EMERGENCY_BROADCAST_SENT",
+    targetType: "EMERGENCY_ALERT",
+    targetId: alert.id,
+    details: { severity: input.severity, recipients: input.recipients.length },
+  });
+
+  res.status(201).json({ alert });
+};
+
+export const paymentRulesHistoryController = async (_req, res) => {
+  const payments = await prisma.payment.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 100,
+    include: {
+      order: {
+        select: { id: true, paymentMethod: true },
+      },
+    },
+  });
+  res.status(200).json({
+    rules: payments.map((payment) => ({
+      createdAt: payment.createdAt,
+      type: payment.provider,
+      method: payment.order?.paymentMethod ?? "ONLINE",
+      amount: (payment.receivedAmount ?? payment.expectedAmount) / 100,
+      status: payment.status,
+      orderId: payment.orderId,
+    })),
+  });
+};
+
+export const threatEventsAliasController = async (req, res) => {
+  const { limit } = z.object({ limit: z.coerce.number().int().min(1).max(500).default(50) }).parse(req.query);
+  const events = await prisma.threatEvent.findMany({
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+  res.status(200).json({
+    events: events.map((event) => ({
+      ...event,
+      timestamp: event.createdAt,
+      severity: event.severity === "WARN" ? "HIGH" : event.severity,
+    })),
+  });
+};
+
+export const threatStatsAliasController = async (_req, res) => {
+  const [blockedIps, activeThreats] = await Promise.all([
+    prisma.iPBlock.count({ where: { blockedUntil: { gt: new Date() } } }),
+    prisma.threatEvent.count({ where: { createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } } }),
+  ]);
+  res.status(200).json({ blockedIps, activeThreats });
+};
+
+export const globalSearchController = async (req, res) => {
+  const input = z
+    .object({
+      q: z.string().min(1).max(120),
+      scope: z.enum(["all", "orders", "users", "products", "categories", "threats", "audit"]).default("all"),
+    })
+    .parse(req.query);
+
+  const query = input.q.trim();
+  const include = (scope) => input.scope === "all" || input.scope === scope;
+
+  const [users, orders, products, threats, audit] = await Promise.all([
+    include("users")
+      ? prisma.user.findMany({
+          where: {
+            OR: [
+              { email: { contains: query, mode: "insensitive" } },
+              { name: { contains: query, mode: "insensitive" } },
+            ],
+          },
+          select: { id: true, email: true, name: true, role: true, isActive: true },
+          take: 20,
+        })
+      : [],
+    include("orders")
+      ? prisma.order.findMany({
+          where: {
+            OR: [
+              { orderNumber: { contains: query, mode: "insensitive" } },
+              { id: { contains: query, mode: "insensitive" } },
+            ],
+          },
+          select: { id: true, orderNumber: true, status: true, totalAmount: true, createdAt: true },
+          take: 20,
+        })
+      : [],
+    include("products")
+      ? prisma.product.findMany({
+          where: {
+            OR: [
+              { name: { contains: query, mode: "insensitive" } },
+              { slug: { contains: query, mode: "insensitive" } },
+              { shortDescription: { contains: query, mode: "insensitive" } },
+              { description: { contains: query, mode: "insensitive" } },
+            ],
+          },
+          select: { id: true, name: true, slug: true, shortDescription: true, isActive: true, updatedAt: true },
+          take: 20,
+        })
+      : [],
+    include("categories")
+      ? prisma.category.findMany({
+          where: {
+            OR: [
+              { name: { contains: query, mode: "insensitive" } },
+              { slug: { contains: query, mode: "insensitive" } },
+              { description: { contains: query, mode: "insensitive" } },
+            ],
+          },
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            isActive: true,
+            updatedAt: true,
+            parent: {
+              select: { id: true, name: true },
+            },
+          },
+          take: 20,
+        })
+      : [],
+    include("threats")
+      ? prisma.threatEvent.findMany({
+          where: {
+            OR: [
+              { eventType: { contains: query, mode: "insensitive" } },
+              { ip: { contains: query, mode: "insensitive" } },
+            ],
+          },
+          select: { id: true, eventType: true, ip: true, severity: true, createdAt: true },
+          take: 20,
+        })
+      : [],
+    include("audit")
+      ? prisma.auditLog.findMany({
+          where: {
+            OR: [
+              { action: { contains: query, mode: "insensitive" } },
+              { targetType: { contains: query, mode: "insensitive" } },
+              { targetId: { contains: query, mode: "insensitive" } },
+            ],
+          },
+          select: { id: true, action: true, targetType: true, targetId: true, createdAt: true },
+          take: 20,
+        })
+      : [],
+  ]);
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "GLOBAL_SEARCH",
+    targetType: "SEARCH",
+    targetId: input.scope,
+    details: { query },
+  });
+
+  res.status(200).json({ users, orders, products, categories, threats, audit });
+};
+
+export const rolePolicyListController = async (_req, res) => {
+  const roles = await listRolePolicies();
+  res.status(200).json({
+    roles,
+    availablePermissions: supportedRolePermissions,
+  });
+};
+
+export const rolePolicyUpdateController = async (req, res) => {
+  const { roleId } = z.object({ roleId: z.string().min(3).max(40) }).parse(req.params);
+  const input = rolePolicySchema.parse(req.body);
+  const mappedRole = roleId.toUpperCase();
+  if (!ROLE_VALUES.includes(mappedRole)) {
+    throw new AppError("Unknown role id.", 400, "INVALID_ROLE_ID");
+  }
+
+  const existingPolicies = await listRolePolicies();
+  const existingPolicy = existingPolicies.find((policy) => policy.role === mappedRole);
+  const previousPermissions = Array.isArray(existingPolicy?.permissions) ? existingPolicy.permissions : [];
+  const addedPermissions = input.permissions.filter((permission) => !previousPermissions.includes(permission));
+  const removedPermissions = previousPermissions.filter((permission) => !input.permissions.includes(permission));
+
+  await updateRolePolicy({
+    role: mappedRole,
+    permissions: input.permissions,
+    updatedById: req.user.id,
+  });
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "RBAC_ROLE_POLICY_UPDATED",
+    targetType: "ROLE_POLICY",
+    targetId: mappedRole,
+    details: {
+      previousPermissionCount: previousPermissions.length,
+      nextPermissionCount: input.permissions.length,
+      addedPermissions,
+      removedPermissions,
+    },
+  });
+
+  res.status(200).json({ ok: true });
+};
+
+export const adminProductsListController = async (req, res) => {
+  const query = z.object({
+    search: z.string().max(120).optional(),
+    status: z.string().optional(),
+    categoryId: z.string().optional(),
+    minPrice: z.coerce.number().optional(),
+    maxPrice: z.coerce.number().optional(),
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(100).default(20),
+  }).parse(req.query);
+
+  const baseWhere = {
+    ...(query.search
+      ? {
+          OR: [
+            { name: { contains: query.search, mode: "insensitive" } },
+            { slug: { contains: query.search, mode: "insensitive" } },
+            { shortDescription: { contains: query.search, mode: "insensitive" } },
+            { description: { contains: query.search, mode: "insensitive" } },
+          ],
+        }
+      : {}),
+    ...(query.categoryId ? { categoryId: query.categoryId } : {}),
+    ...((query.minPrice !== undefined || query.maxPrice !== undefined)
+      ? {
+          variants: {
+            some: {
+              price: {
+                ...(query.minPrice !== undefined ? { gte: query.minPrice } : {}),
+                ...(query.maxPrice !== undefined ? { lte: query.maxPrice } : {}),
+              }
+            }
+          }
+        }
+      : {})
+  };
+
+  const statusWhere = query.status === "ACTIVE" 
+    ? { isActive: true } 
+    : query.status === "INACTIVE" 
+      ? { isActive: false } 
+      : query.status === "OUT_OF_STOCK" 
+        ? { variants: { none: { stock: { gt: 0 } } } } 
+        : {};
+
+  const where = { ...baseWhere, ...statusWhere };
+
+  const [total, products, activeCount, inactiveCount, outOfStockCount, allCount] = await Promise.all([
+    prisma.product.count({ where }),
+    prisma.product.findMany({
+      where,
+      include: adminProductInclude,
+      orderBy: { updatedAt: "desc" },
+      skip: (query.page - 1) * query.limit,
+      take: query.limit,
+    }),
+    prisma.product.count({ where: { ...baseWhere, isActive: true } }),
+    prisma.product.count({ where: { ...baseWhere, isActive: false } }),
+    prisma.product.count({ where: { ...baseWhere, variants: { none: { stock: { gt: 0 } } } } }),
+    prisma.product.count({ where: baseWhere }),
+  ]);
+
+  res.status(200).json({
+    total,
+    counts: {
+      All: allCount,
+      Active: activeCount,
+      Inactive: inactiveCount,
+      "Out of Stock": outOfStockCount,
+    },
+    items: products.map((product) => serializeAdminProduct(req, product)),
+  });
+};
+
+export const adminProductsCreateController = async (req, res) => {
+  const input = productCreateSchema.parse(req.body);
+  await enforceProductPaymentRules({
+    isDigital: input.isDigital,
+    paymentOnlineOnly: input.paymentOnlineOnly,
+    paymentAllowCOD: input.paymentAllowCOD,
+    paymentMinCODPrice: input.paymentMinCODPrice ?? null,
+  });
+
+  const normalizedMinCodPrice = toOptionalDecimalString(input.paymentMinCODPrice ?? null, "paymentMinCODPrice");
+  const resolvedSlug = await resolveProductSlug({
+    name: input.name,
+    slug: input.slug,
+  });
+
+  const product = await prisma.product.create({
+    data: {
+      listerId: req.user.id,
+      categoryId: input.categoryId,
+      name: sanitizeText(input.name),
+      slug: resolvedSlug,
+      shortDescription: normalizeOptionalText(input.shortDescription, 220),
+      description: sanitizeText(input.description),
+      seoTitle: normalizeOptionalText(input.seoTitle, 160),
+      seoDescription: normalizeOptionalText(input.seoDescription, 320),
+      isDigital: input.isDigital,
+      paymentOnlineOnly: input.paymentOnlineOnly,
+      paymentAllowCOD: input.paymentAllowCOD,
+      paymentMinCODPrice: normalizedMinCodPrice,
+      variants: {
+        create: {
+          sku: `ADM-${Date.now()}`,
+          title: "Default Variant",
+          attributes: {},
+          price: input.price.toFixed(2),
+          compareAtPrice: input.compareAtPrice ? input.compareAtPrice.toFixed(2) : null,
+          stock: input.stockQuantity,
+        },
+      },
+    },
+    include: adminProductInclude,
+  });
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "ADMIN_PRODUCT_CREATED",
+    targetType: "PRODUCT",
+    targetId: product.id,
+    details: { name: product.name },
+  });
+
+  res.status(201).json({
+    product: serializeAdminProduct(req, product),
+  });
+};
+
+export const adminProductsPatchController = async (req, res) => {
+  const { productId } = productIdParamSchema.parse(req.params);
+  const input = productPatchSchema.parse(req.body);
+
+  const existing = await getAdminProductById(productId);
+  if (!existing) throw new AppError("Product not found.", 404, "PRODUCT_NOT_FOUND");
+  const existingPrimaryVariant = existing.variants[0] ?? null;
+
+  const mergedPaymentRules = {
+    isDigital: input.isDigital ?? existing.isDigital,
+    paymentOnlineOnly: input.paymentOnlineOnly ?? existing.paymentOnlineOnly,
+    paymentAllowCOD: input.paymentAllowCOD ?? existing.paymentAllowCOD,
+    paymentMinCODPrice:
+      input.paymentMinCODPrice !== undefined
+        ? input.paymentMinCODPrice
+        : existing.paymentMinCODPrice === null || existing.paymentMinCODPrice === undefined
+          ? null
+          : Number(existing.paymentMinCODPrice),
+  };
+
+  await enforceProductPaymentRules(mergedPaymentRules);
+  const resolvedSlug = await resolveProductSlug({
+    productId,
+    name: input.name ?? existing.name,
+    slug: input.slug,
+    fallbackSlug: existing.slug,
+  });
+
+  await prisma.$transaction(async (tx) => {
+    await tx.product.update({
+      where: { id: productId },
+      data: {
+        ...(input.name ? { name: sanitizeText(input.name) } : {}),
+        ...(input.slug !== undefined || input.name !== undefined || existing.slug
+          ? { slug: resolvedSlug }
+          : {}),
+        ...(input.shortDescription !== undefined
+          ? { shortDescription: normalizeOptionalText(input.shortDescription, 220) }
+          : {}),
+        ...(input.description ? { description: sanitizeText(input.description) } : {}),
+        ...(input.seoTitle !== undefined ? { seoTitle: normalizeOptionalText(input.seoTitle, 160) } : {}),
+        ...(input.seoDescription !== undefined
+          ? { seoDescription: normalizeOptionalText(input.seoDescription, 320) }
+          : {}),
+        ...(input.categoryId ? { categoryId: input.categoryId } : {}),
+        ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),
+        ...(input.isDigital !== undefined ? { isDigital: input.isDigital } : {}),
+        ...(input.paymentOnlineOnly !== undefined ? { paymentOnlineOnly: input.paymentOnlineOnly } : {}),
+        ...(input.paymentAllowCOD !== undefined ? { paymentAllowCOD: input.paymentAllowCOD } : {}),
+        ...(input.paymentMinCODPrice !== undefined
+          ? {
+              paymentMinCODPrice: toOptionalDecimalString(input.paymentMinCODPrice, "paymentMinCODPrice"),
+            }
+          : {}),
+      },
+    });
+
+    if ((input.price !== undefined || input.stockQuantity !== undefined || input.compareAtPrice !== undefined) && existingPrimaryVariant) {
+      await tx.productVariant.update({
+        where: { id: existingPrimaryVariant.id },
+        data: {
+          ...(input.price !== undefined ? { price: input.price.toFixed(2) } : {}),
+          ...(input.compareAtPrice !== undefined ? { compareAtPrice: input.compareAtPrice === null ? null : input.compareAtPrice.toFixed(2) } : {}),
+          ...(input.stockQuantity !== undefined ? { stock: input.stockQuantity } : {}),
+        },
+      });
+    }
+  });
+
+  const updated = await getAdminProductById(productId);
+  if (!updated) throw new AppError("Product not found.", 404, "PRODUCT_NOT_FOUND");
+  const updatedPrimaryVariant = updated.variants[0] ?? null;
+  const priceChanged =
+    input.price !== undefined &&
+    existingPrimaryVariant &&
+    Number(existingPrimaryVariant.price) !== Number(updatedPrimaryVariant?.price);
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "ADMIN_PRODUCT_UPDATED",
+    targetType: "PRODUCT",
+    targetId: productId,
+    details: {
+      ...input,
+      ...(priceChanged
+        ? {
+            priceChange: {
+              variantId: existingPrimaryVariant.id,
+              previousPrice: String(existingPrimaryVariant.price),
+              nextPrice: updatedPrimaryVariant?.price === undefined ? null : String(updatedPrimaryVariant.price),
+            },
+          }
+        : {}),
+    },
+  });
+
+  if (priceChanged) {
+    await writeAuditLog({
+      req,
+      actorId: req.user.id,
+      action: "ADMIN_PRODUCT_PRICE_UPDATED",
+      targetType: "PRODUCT_VARIANT",
+      targetId: existingPrimaryVariant.id,
+      details: {
+        productId,
+        productName: updated.name,
+        previousPrice: String(existingPrimaryVariant.price),
+        nextPrice: updatedPrimaryVariant?.price === undefined ? null : String(updatedPrimaryVariant.price),
+      },
+    });
+  }
+
+  res.status(200).json({
+    product: serializeAdminProduct(req, updated),
+  });
+};
+
+export const adminProductsDeleteController = async (req, res) => {
+  const { productId } = productIdParamSchema.parse(req.params);
+  const orderCount = await prisma.orderItem.count({ where: { productId } });
+  if (orderCount === 0) {
+    const variants = await prisma.productVariant.findMany({ where: { productId }, select: { id: true } });
+    const variantIds = variants.map(v => v.id);
+    if (variantIds.length > 0) {
+      await prisma.cartItem.deleteMany({ where: { variantId: { in: variantIds } } });
+    }
+    await prisma.product.delete({ where: { id: productId } });
+  } else {
+    await prisma.product.update({ where: { id: productId }, data: { isActive: false } });
+  }
+  await writeAuditLog({
+    req, actorId: req.user.id,
+    action: orderCount === 0 ? "ADMIN_PRODUCT_DELETED" : "ADMIN_PRODUCT_DEACTIVATED",
+    targetType: "PRODUCT", targetId: productId, details: { orderCount }
+  });
+  res.status(204).send();
+};
+
+export const adminProductImageCreateController = async (req, res) => {
+  const { productId } = productIdParamSchema.parse(req.params);
+  const input = productImageCreateSchema.parse(req.body);
+
+  const image = await createProductImage({ productId, input });
+  const product = await getAdminProductById(productId);
+  if (!product) throw new AppError("Product not found.", 404, "PRODUCT_NOT_FOUND");
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "ADMIN_PRODUCT_IMAGE_CREATED",
+    targetType: "PRODUCT_IMAGE",
+    targetId: image.id,
+    details: {
+      productId,
+      sizeBytes: image.sizeBytes,
+      mimeType: image.mimeType,
+      isPrimary: image.isPrimary,
+    },
+  });
+
+  res.status(201).json({
+    image: serializeProductImage(req, image),
+    product: serializeAdminProduct(req, product),
+  });
+};
+
+export const adminProductImageDeleteController = async (req, res) => {
+  const { productId, imageId } = productImageParamSchema.parse(req.params);
+
+  await deleteProductImage({ productId, imageId });
+  const product = await getAdminProductById(productId);
+  if (!product) throw new AppError("Product not found.", 404, "PRODUCT_NOT_FOUND");
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "ADMIN_PRODUCT_IMAGE_DELETED",
+    targetType: "PRODUCT_IMAGE",
+    targetId: imageId,
+    details: { productId },
+  });
+
+  res.status(200).json({
+    ok: true,
+    product: serializeAdminProduct(req, product),
+  });
+};
+
+export const adminProductImagePrimaryController = async (req, res) => {
+  const { productId, imageId } = productImageParamSchema.parse(req.params);
+
+  await setPrimaryProductImage({ productId, imageId });
+  const product = await getAdminProductById(productId);
+  if (!product) throw new AppError("Product not found.", 404, "PRODUCT_NOT_FOUND");
+
+  await writeAuditLog({
+    req,
+    actorId: req.user.id,
+    action: "ADMIN_PRODUCT_IMAGE_PRIMARY_SET",
+    targetType: "PRODUCT_IMAGE",
+    targetId: imageId,
+    details: { productId },
+  });
+
+  res.status(200).json({
+    product: serializeAdminProduct(req, product),
+  });
+};
+
+export const paymentRulesUpdatePutAliasController = async (req, res, next) => {
+  req.method = "PATCH";
+  return next();
+};
+
+export const adminThreatEventsAliasController = async (req, res) => threatEventsAliasController(req, res);
+
+export const adminThreatStatsAliasController = async (req, res) => threatStatsAliasController(req, res);
+
+export const adminSingleProductAnalyticsController = async (req, res) => {
+  const { productId } = req.params;
+  const { period } = req.query; // e.g., '7d', '30d', '90d'
+
+  // Determine date threshold
+  let days = 30;
+  if (period === '7d') days = 7;
+  if (period === '90d') days = 90;
+
+  const thresholdDate = new Date();
+  thresholdDate.setDate(thresholdDate.getDate() - days);
+
+  // 1. Get total views (from generic metrics or fallback mock if no view tracking exists)
+  // For now, we'll mock views as they are usually tracked in a separate analytics store (Redis, Google Analytics, etc)
+  const views = Math.floor(Math.random() * 5000) + 1000;
+  const viewsChange = parseFloat(((Math.random() * 20) - 10).toFixed(1));
+
+  // 2. Get Orders and Revenue for this product
+  const orderItems = await prisma.orderItem.findMany({
+    where: {
+      productId,
+      order: {
+        createdAt: { gte: thresholdDate },
+        status: { in: ["DELIVERED", "SHIPPED", "PROCESSING", "PENDING_PAYMENT"] }
+      }
+    },
+    include: {
+      product: true,
+      variant: true
+    }
+  });
+
+  const totalOrders = new Set(orderItems.map(item => item.orderId)).size;
+  const totalRevenue = orderItems.reduce((sum, item) => sum + Number(item.lineTotal || 0), 0);
+  
+  // Calculate a conversion rate based on orders and views
+  const conversionRate = views > 0 ? parseFloat(((totalOrders / views) * 100).toFixed(2)) : 0;
+
+  // 3. Views Time Series (Area Chart)
+  const viewsTimeSeries = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    
+    // We add a synthetic view count since we don't track views per day in the DB yet
+    // In a real scenario, this comes from a time-series DB.
+    viewsTimeSeries.push({
+      name: dateStr,
+      views: Math.floor(Math.random() * 100) + 20
+    });
+  }
+
+  // 4. Sales by Variant (Donut Chart)
+  const variantSalesMap = new Map();
+  orderItems.forEach(item => {
+    const vName = item.variant ? item.variant.sku || item.variant.id : "Default";
+    variantSalesMap.set(vName, (variantSalesMap.get(vName) || 0) + item.quantity);
+  });
+  
+  const salesByVariant = Array.from(variantSalesMap.entries()).map(([name, count]) => ({
+    name,
+    count
+  }));
+
+  // Ensure there's at least some variant data to show in the chart if there are no sales
+  if (salesByVariant.length === 0) {
+    salesByVariant.push({ name: "Default", count: 0 });
+  }
+
+  res.json({
+    views,
+    viewsChange,
+    orders: totalOrders,
+    ordersChange: parseFloat(((Math.random() * 10) - 5).toFixed(1)), // Mock trend
+    revenue: totalRevenue,
+    revenueChange: parseFloat(((Math.random() * 10) - 5).toFixed(1)), // Mock trend
+    conversionRate,
+    conversionChange: parseFloat(((Math.random() * 2) - 1).toFixed(2)), // Mock trend
+    viewsTimeSeries,
+    salesByVariant
+  });
+};
+
+export const adminProductsExportController = async (req, res) => {
+  const query = z.object({
+    search: z.string().max(120).optional(),
+    status: z.string().optional(),
+    categoryId: z.string().optional(),
+    minPrice: z.coerce.number().optional(),
+    maxPrice: z.coerce.number().optional(),
+    includeVariants: z.coerce.boolean().default(false),
+  }).parse(req.query);
+
+  const baseWhere = {
+    ...(query.search
+      ? {
+          OR: [
+            { name: { contains: query.search, mode: "insensitive" } },
+            { slug: { contains: query.search, mode: "insensitive" } },
+            { shortDescription: { contains: query.search, mode: "insensitive" } },
+            { description: { contains: query.search, mode: "insensitive" } },
+          ],
+        }
+      : {}),
+    ...(query.categoryId ? { categoryId: query.categoryId } : {}),
+    ...((query.minPrice !== undefined || query.maxPrice !== undefined)
+      ? {
+          variants: {
+            some: {
+              price: {
+                ...(query.minPrice !== undefined ? { gte: query.minPrice } : {}),
+                ...(query.maxPrice !== undefined ? { lte: query.maxPrice } : {}),
+              }
+            }
+          }
+        }
+      : {})
+  };
+
+  const statusWhere = query.status === "ACTIVE" 
+    ? { isActive: true } 
+    : query.status === "INACTIVE" 
+      ? { isActive: false } 
+      : query.status === "OUT_OF_STOCK" 
+        ? { variants: { none: { stock: { gt: 0 } } } } 
+        : {};
+
+  const where = { ...baseWhere, ...statusWhere };
+
+  const products = await prisma.product.findMany({
+    where,
+    include: {
+      category: { select: { name: true } },
+      variants: true,
+    },
+    orderBy: { updatedAt: "desc" },
+  });
+
+  const rows = [];
+  if (query.includeVariants) {
+    rows.push(["Product ID", "Product Name", "SKU", "Variant Title", "Category", "Status", "Price", "Stock", "Compare At Price"].join(","));
+    for (const product of products) {
+      for (const variant of product.variants) {
+        rows.push([
+          product.id,
+          `"${(product.name || '').replace(/"/g, '""')}"`,
+          `"${(variant.sku || '').replace(/"/g, '""')}"`,
+          `"${(variant.title || '').replace(/"/g, '""')}"`,
+          `"${(product.category?.name || '').replace(/"/g, '""')}"`,
+          product.isActive ? "ACTIVE" : "INACTIVE",
+          variant.price,
+          variant.stock,
+          variant.compareAtPrice || ""
+        ].join(","));
+      }
+    }
+  } else {
+    rows.push(["Product ID", "Product Name", "Category", "Status", "Base Price", "Total Stock"].join(","));
+    for (const product of products) {
+      const basePrice = product.variants[0]?.price || 0;
+      const totalStock = product.variants.reduce((sum, v) => sum + v.stock, 0);
+      rows.push([
+        product.id,
+        `"${(product.name || '').replace(/"/g, '""')}"`,
+        `"${(product.category?.name || '').replace(/"/g, '""')}"`,
+        product.isActive ? "ACTIVE" : "INACTIVE",
+        basePrice,
+        totalStock
+      ].join(","));
+    }
+  }
+
+  res.setHeader("Content-Type", "text/csv");
+  res.setHeader("Content-Disposition", `attachment; filename=products-export-${Date.now()}.csv`);
+  res.status(200).send(rows.join("\n"));
+};
+
+export const adminProductGetController = async (req, res) => {
+  const { productId } = req.params;
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
+    include: adminProductInclude,
+  });
+  if (!product) {
+    return res.status(404).json({ error: "Product not found." });
+  }
+  res.status(200).json(serializeAdminProduct(req, product));
+};
+
+export const adminProductVariantsController = async (req, res) => {
+  const { productId } = req.params;
+
+  if (req.method === "GET") {
+    const variants = await prisma.productVariant.findMany({ where: { productId } });
+    return res.status(200).json({
+      variants: variants.map(v => {
+        const attrs = typeof v.attributes === 'string' ? JSON.parse(v.attributes) : (v.attributes || {});
+        return {
+          id: v.id,
+          sku: v.sku,
+          price: v.price,
+          stock: v.stock,
+          isActive: v.isActive,
+          title: v.title,
+          color: attrs.color || "",
+          colorHex: attrs.colorHex || "",
+          size: attrs.size || "",
+        };
+      })
+    });
+  }
+
+  if (req.method === "POST") {
+    const { variants } = req.body;
+    const existingVariants = await prisma.productVariant.findMany({ where: { productId } });
+    const payloadIds = variants.map(v => v.id).filter(Boolean);
+    const toDelete = existingVariants.filter(v => !payloadIds.includes(v.id));
+
+    for (const v of toDelete) {
+      try {
+        await prisma.productVariant.delete({ where: { id: v.id } });
+      } catch (e) {
+        await prisma.productVariant.update({ where: { id: v.id }, data: { stock: 0, isActive: false } });
+      }
+    }
+
+    for (const v of variants) {
+      const attributes = { color: v.color, colorHex: v.colorHex, size: v.size };
+      let title = "Default";
+      if (v.size && v.color) title = v.color + " / " + v.size;
+      else if (v.size) title = v.size;
+      else if (v.color) title = v.color;
+      
+      const data = {
+        sku: v.sku || "SKU-" + Date.now() + "-" + Math.floor(Math.random()*10000),
+        title,
+        price: v.price || 0,
+        stock: v.stock || 0,
+        isActive: v.isActive !== false,
+        attributes,
+      };
+      
+      if (v.id) {
+        await prisma.productVariant.update({ where: { id: v.id }, data });
+      } else {
+        await prisma.productVariant.create({ data: { ...data, productId } });
+      }
+    }
+
+    return res.status(200).json({ ok: true });
+  }
+};
+

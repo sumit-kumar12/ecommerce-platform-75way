@@ -1,0 +1,181 @@
+.financeContainer {
+  background-color: #0F0E17;
+  color: #FFFFFE;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  min-height: 100vh;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.financeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.financeHeader h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #FFFFFE;
+}
+
+.withdrawBtn {
+  background: linear-gradient(135deg, #FF8906 0%, #F25F4C 100%);
+  color: #FFFFFE;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.withdrawBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 137, 6, 0.4);
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.kpiCard {
+  background-color: #1A1924;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.kpiCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 137, 6, 0.3);
+}
+
+.kpiIcon {
+  font-size: 2.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.kpiInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.kpiLabel {
+  font-size: 0.875rem;
+  color: #A7A9BE;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kpiValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFE;
+}
+
+.tableContainer {
+  background-color: #1A1924;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tableContainer h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.tableResponsive {
+  overflow-x: auto;
+}
+
+.payoutTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 600px;
+}
+
+.payoutTable th {
+  padding: 1rem;
+  color: #A7A9BE;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.payoutTable td {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #E8E4E6;
+}
+
+.payoutTable tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.payoutTable tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.payoutId {
+  font-family: monospace;
+  color: #FF8906 !important;
+  font-weight: 600;
+}
+
+.payoutAmount {
+  font-weight: 600;
+  color: #FFFFFE !important;
+}
+
+.statusBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+}
+
+.statusCompleted {
+  background-color: rgba(44, 182, 125, 0.15);
+  color: #2CB67D;
+  border: 1px solid rgba(44, 182, 125, 0.3);
+}
+
+.statusPending {
+  background-color: rgba(255, 137, 6, 0.15);
+  color: #FF8906;
+  border: 1px solid rgba(255, 137, 6, 0.3);
+}
+
+.statusFailed {
+  background-color: rgba(242, 95, 76, 0.15);
+  color: #F25F4C;
+  border: 1px solid rgba(242, 95, 76, 0.3);
+}

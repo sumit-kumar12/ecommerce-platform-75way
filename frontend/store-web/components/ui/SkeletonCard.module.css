@@ -1,0 +1,18 @@
+.card {
+  min-height: 23rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(90deg, rgba(23, 32, 51, 0.9), rgba(30, 41, 59, 0.9), rgba(23, 32, 51, 0.9));
+  background-size: 200% 100%;
+  animation: shimmer 1.8s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+

@@ -1,0 +1,118 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.35rem;
+}
+
+.header {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+}
+
+.item {
+  display: flex;
+  gap: 0.75rem;
+  position: relative;
+  padding: 0.35rem 0;
+}
+
+.connector {
+  width: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-top: 0.25rem;
+  z-index: 2;
+}
+
+.line {
+  width: 2px;
+  flex: 1;
+  background: var(--glass-border);
+  margin: 0.25rem 0;
+}
+
+.content {
+  padding-bottom: 0.9rem;
+  flex: 1;
+}
+
+.title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.threatText {
+  color: var(--accent-danger);
+  font-weight: 700;
+}
+
+.resource {
+  margin: 0.22rem 0 0;
+  font-size: 0.66rem;
+  color: rgba(173, 186, 232, 0.72);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.meta {
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin: 0.25rem 0 0 0;
+}
+
+.footerAction {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.footerAction:hover {
+  color: var(--primary);
+}
+
+/* Colors */
+.cyan { background-color: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan); }
+.danger { background-color: var(--accent-danger); box-shadow: 0 0 8px var(--accent-danger); }
+.primary { background-color: var(--primary); box-shadow: 0 0 8px var(--primary); }
+.muted { background-color: var(--text-muted); }

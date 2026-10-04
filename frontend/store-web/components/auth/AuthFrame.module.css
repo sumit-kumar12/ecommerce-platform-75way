@@ -1,0 +1,255 @@
+.shell {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(139, 92, 246, 0.2), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.14), transparent 22%),
+    #0a0910;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 30px 30px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.orbTop,
+.orbBottom {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+.orbTop {
+  top: -12rem;
+  left: -10rem;
+  width: 28rem;
+  height: 28rem;
+  background: rgba(139, 92, 246, 0.22);
+}
+
+.orbBottom {
+  right: -10rem;
+  bottom: -12rem;
+  width: 24rem;
+  height: 24rem;
+  background: rgba(37, 99, 235, 0.18);
+}
+
+.header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(10, 9, 16, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.brandLogo {
+  width: 1.9rem;
+  height: 1.9rem;
+  display: block;
+  object-fit: contain;
+}
+
+.brandText {
+  color: #f8fafc;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.headerAction {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.main {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+
+.panelWrap {
+  width: 100%;
+}
+
+.narrow {
+  max-width: 31rem;
+}
+
+.medium {
+  max-width: 36rem;
+}
+
+.wide {
+  max-width: 42rem;
+}
+
+.hero {
+  display: grid;
+  gap: 1.1rem;
+  justify-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.panel {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1.75rem;
+  background: rgba(30, 27, 58, 0.4);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 24px 60px -32px rgba(15, 23, 42, 0.8);
+  padding: 2rem;
+}
+
+.copy {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  color: #f8fafc;
+}
+
+.subtitle {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.content {
+  display: grid;
+  gap: 1rem;
+}
+
+.footer {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.bottomBar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem 1.5rem;
+  color: #64748b;
+  font-size: 0.74rem;
+}
+
+.bottomLinks {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+
+.bottomLinks a {
+  transition: color 0.2s ease;
+}
+
+.bottomLinks a:hover {
+  color: #9fb2ff;
+}
+
+.monitor {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem 0.95rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(52, 211, 153, 0.18);
+  background: rgba(15, 23, 42, 0.65);
+  color: #d1fae5;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.monitorPulse {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  background: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.72);
+  animation: pulse 1.4s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.72);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+@media (max-width: 720px) {
+  .header,
+  .bottomBar {
+    padding-inline: 1rem;
+  }
+
+  .panel {
+    padding: 1.5rem;
+    border-radius: 1.4rem;
+  }
+
+  .bottomBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .monitor {
+    position: static;
+  }
+}
+

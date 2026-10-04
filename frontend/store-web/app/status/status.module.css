@@ -1,0 +1,165 @@
+.container {
+  padding: 48px 24px;
+  color: #94a3b8;
+  font-family: 'Inter', sans-serif;
+  animation: fadeIn 0.3s ease-out;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.title {
+  color: #f8fafc;
+  font-size: 36px;
+  font-weight: 800;
+  margin: 0 0 12px 0;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 18px;
+  margin: 0;
+}
+
+.statusBanner {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.bannerIcon {
+  font-size: 48px;
+}
+
+.bannerText h2 {
+  color: #10b981;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.bannerText p {
+  color: #94a3b8;
+  margin: 0;
+}
+
+.serviceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 64px;
+}
+
+.serviceCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.serviceHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.serviceName {
+  color: #f8fafc;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.statusBadge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.statusOperational {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.uptimeBar {
+  height: 8px;
+  background: #10b981;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.uptimeText {
+  display: flex;
+  justify-content: space-between;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.incidentHistory {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 48px;
+}
+
+.historyTitle {
+  color: #f8fafc;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 32px 0;
+}
+
+.incidentList {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.incidentItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.incidentDate {
+  color: #8C63F5;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.incidentTitle {
+  color: #f8fafc;
+  font-size: 18px;
+  margin: 0;
+}
+
+.incidentDesc {
+  color: #94a3b8;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.incidentDesc strong {
+  color: #e2e8f0;
+}
+
+@media (max-width: 768px) {
+  .serviceGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

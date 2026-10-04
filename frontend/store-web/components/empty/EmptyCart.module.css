@@ -1,0 +1,80 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.iconWrapper {
+  font-size: 80px;
+  margin-bottom: 24px;
+  opacity: 0.8;
+}
+
+.animateFloat {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float { 
+  0%, 100% { transform: translateY(0) } 
+  50% { transform: translateY(-12px) } 
+}
+
+.title {
+  color: #f8fafc;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  color: #94a3b8;
+  font-size: 16px;
+  margin: 0 0 32px 0;
+}
+
+.benefitsRow {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.benefit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.benefit span {
+  font-size: 24px;
+}
+
+.actionBtn {
+  background: #8C63F5;
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actionBtn:hover {
+  background: #7a52d4;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(140, 99, 245, 0.4);
+}
+

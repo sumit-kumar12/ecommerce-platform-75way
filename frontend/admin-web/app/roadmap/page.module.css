@@ -1,0 +1,458 @@
+.page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.header,
+.footerPanel,
+.roadmapCard,
+.column,
+.searchWrap {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 1.35rem;
+  background: #0F0E17;
+}
+
+.brandRow,
+.headerTools,
+.hero,
+.heroActions,
+.columnHeader,
+.cardTop,
+.footerPanel,
+.footerLead,
+.footerStats {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.brandMark,
+.profileDot,
+.columnIcon,
+.footerIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.85rem;
+  display: grid;
+  place-items: center;
+}
+
+.brandMark {
+  background: #8B5CF6;
+  color: #ffffff;
+}
+
+.brandText,
+.hero h1,
+.column h2,
+.roadmapCard h3,
+.footerLead h4 {
+  margin: 0;
+  color: #f8fafc;
+  font-family: var(--font-display);
+}
+
+.brandText {
+  font-weight: 800;
+}
+
+.brandText span,
+.hero h1 span {
+  color: #8B5CF6;
+}
+
+.nav {
+  display: flex;
+  gap: 1.35rem;
+  margin-left: 1rem;
+}
+
+.nav a,
+.navActive {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.navActive {
+  color: #8B5CF6;
+  border-bottom: 2px solid #8B5CF6;
+  padding-bottom: 0.25rem;
+}
+
+.searchWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 15rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.9rem;
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.searchWrap span,
+.profileDot {
+  color: #cbd5e1;
+}
+
+.searchWrap input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  outline: none;
+  color: #f8fafc;
+}
+
+.profileDot {
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  font-weight: 800;
+}
+
+.hero {
+  justify-content: space-between;
+  align-items: end;
+}
+
+.hero h1 {
+  font-size: clamp(2.8rem, 5vw, 4.6rem);
+  line-height: 0.92;
+  text-transform: uppercase;
+  font-style: italic;
+  letter-spacing: -0.05em;
+}
+
+.hero p,
+.roadmapCard p,
+.footerLead p {
+  margin: 0.45rem 0 0;
+  color: #94a3b8;
+  line-height: 1.65;
+}
+
+.primaryAction,
+.secondaryAction,
+.tab,
+.tabActive,
+.dashedCard {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0 1.15rem;
+  border-radius: 0.9rem;
+  font-weight: 800;
+}
+
+.primaryAction {
+  border: 0;
+  background: #8B5CF6;
+  color: #ffffff;
+  box-shadow: 0 18px 36px rgba(139, 92, 246, 0.2);
+}
+
+.secondaryAction {
+  border: 0;
+  background: rgba(139, 92, 246, 0.1);
+  color: #e2e8f0;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.16);
+}
+
+.tab,
+.tabActive {
+  min-height: auto;
+  padding: 1rem 1.2rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: #64748b;
+}
+
+.tabActive {
+  color: #8B5CF6;
+  border-bottom-color: #8B5CF6;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.column {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.columnHeader {
+  margin-bottom: 1rem;
+}
+
+.columnIcon {
+  border: 1px solid transparent;
+}
+
+.securityTone {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.paymentsTone {
+  background: rgba(139, 92, 246, 0.12);
+  color: #8B5CF6;
+  border-color: rgba(139, 92, 246, 0.2);
+}
+
+.storeTone {
+  background: rgba(249, 115, 22, 0.12);
+  color: #f97316;
+  border-color: rgba(249, 115, 22, 0.2);
+}
+
+.cardStack {
+  display: grid;
+  gap: 1rem;
+}
+
+.roadmapCard,
+.dashedCard {
+  padding: 1.15rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.roadmapCard {
+  border-left: 4px solid #334155;
+}
+
+.roadmapCard:nth-child(1) {
+  border-left-color: #ef4444;
+}
+
+.column:nth-child(2) .roadmapCard:nth-child(1),
+.column:nth-child(2) .roadmapCard:nth-child(2) {
+  border-left-color: #8B5CF6;
+}
+
+.column:nth-child(3) .roadmapCard:nth-child(2) {
+  border-left-color: #f97316;
+}
+
+.doneCard {
+  opacity: 0.78;
+}
+
+.statusPill {
+  padding: 0.22rem 0.55rem;
+  border-radius: 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.statusCritical {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.statusBacklog {
+  background: #374151;
+  color: #d1d5db;
+}
+
+.statusComplete {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.statusPrimary {
+  background: #8B5CF6;
+  color: #ffffff;
+}
+
+.statusSoft {
+  background: rgba(139, 92, 246, 0.18);
+  color: #a5b4fc;
+}
+
+.statusStore {
+  background: #f97316;
+  color: #ffffff;
+}
+
+.quarter,
+.doneIcon {
+  color: #64748b;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.doneIcon {
+  color: #22c55e;
+}
+
+.progressBar {
+  width: 100%;
+  height: 0.28rem;
+  margin-top: 0.6rem;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.2);
+  overflow: hidden;
+}
+
+.progressBar span {
+  display: block;
+  height: 100%;
+  background: #8B5CF6;
+}
+
+.teamRow {
+  display: flex;
+  margin-top: 0.7rem;
+}
+
+.teamRow i {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  border: 2px solid #0F0E17;
+  background: #475569;
+  margin-left: -0.35rem;
+}
+
+.teamRow i:first-child {
+  margin-left: 0;
+  background: #64748b;
+}
+
+.notePill {
+  margin-top: 0.75rem;
+  display: inline-flex;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.82);
+  color: #94a3b8;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dashedCard {
+  border: 2px dashed rgba(71, 85, 105, 0.58);
+  color: #94a3b8;
+  background: transparent;
+}
+
+.footerPanel {
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-radius: 1.35rem;
+  background: rgba(139, 92, 246, 0.06);
+}
+
+.footerLead {
+  gap: 1rem;
+}
+
+.footerIcon {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.16);
+  color: #8B5CF6;
+}
+
+.footerLead h4 span {
+  margin-left: 0.5rem;
+  color: #22c55e;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.footerStats {
+  gap: 2.5rem;
+}
+
+.footerStats div {
+  display: grid;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.footerStats small {
+  color: #64748b;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.footerStats strong {
+  color: #f8fafc;
+  font-size: 2rem;
+  font-family: var(--font-display);
+}
+
+.footerStats strong span {
+  color: #8B5CF6;
+  font-size: 0.82rem;
+}
+
+.good {
+  color: #22c55e;
+}
+
+@media (max-width: 1200px) {
+  .board {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .header,
+  .hero,
+  .footerPanel,
+  .footerStats,
+  .brandRow,
+  .headerTools {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav {
+    margin-left: 0;
+    flex-wrap: wrap;
+  }
+
+  .searchWrap {
+    min-width: 0;
+    width: 100%;
+  }
+}
+

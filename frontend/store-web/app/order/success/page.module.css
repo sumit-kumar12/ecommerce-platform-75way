@@ -1,0 +1,283 @@
+.page {
+  padding: 2rem;
+  min-height: 100vh;
+  background: var(--surface-subtle);
+  animation: fadeIn 0.8s ease-out;
+}
+
+.topBar {
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 1rem 0;
+}
+
+.topInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.brandLogo {
+  background: var(--neon-cyan);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brandWordmark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.statusPill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+
+.main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 5rem;
+}
+
+.successIntro {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.successIcon {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 2rem;
+  background: rgba(0, 255, 242, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.successIcon span {
+  font-size: 3rem;
+  color: var(--neon-cyan);
+}
+
+.successGlow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 30px rgba(0, 255, 242, 0.3);
+  animation: pulse 2s infinite;
+}
+
+.successIntro h1 {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.successIntro p {
+  color: var(--text-dim);
+  font-size: 1.1rem;
+}
+
+.contentGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.trackingCard {
+  padding: 2rem;
+  border: 1px solid var(--border-subtle);
+  margin-top: 1rem;
+}
+
+.trackingHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+}
+
+.trackingId p, .trackingStatus p {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.statusLabel {
+  color: var(--neon-cyan);
+  font-weight: 700;
+}
+
+.visualTracker {
+  padding: 1rem 0;
+}
+
+.trackLine {
+  position: relative;
+  height: 4px;
+  background: var(--surface-overlay);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trackProgress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.trackNode {
+  background: var(--surface-overlay);
+  border: 1px solid var(--border-subtle);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.trackNode span {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+}
+
+.nodeActive {
+  background: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+}
+
+.nodeActive span {
+  color: #000;
+}
+
+.orderSummary {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.itemList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.itemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.totalRow {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+}
+
+.infoCard {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.infoCard h4 {
+  font-family: var(--font-display);
+  margin-bottom: 0.75rem;
+}
+
+.infoCard p {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.actionRow {
+  display: flex;
+  justify-content: center;
+}
+
+.dispatchPill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  opacity: 0.4;
+}
+
+.dispatchPill p {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+}
+
+.footerNav {
+  margin-top: 4rem;
+  text-align: center;
+}
+
+.returnBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.returnBtn:hover {
+  color: var(--neon-cyan);
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 0.3; }
+  100% { transform: scale(1); opacity: 0.6; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+

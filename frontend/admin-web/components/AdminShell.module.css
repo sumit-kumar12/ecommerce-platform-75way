@@ -1,0 +1,121 @@
+/* AdminShell layout — sidebar is now self-contained (AdminSidebarShell) */
+
+.shell {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  background: #0F0E17;
+}
+
+/* Desktop sidebar slot — the AdminSidebarShell <aside> inside sets its own width */
+.sidebarRail {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  flex-shrink: 0;
+  overflow: hidden;
+  /* The new sidebar's bg/border are Tailwind classes; this is just the slot */
+}
+
+/* Main content area */
+.workspace {
+  flex: 1 1 0%;
+  min-width: 0;
+  padding: 0 1.15rem 1.15rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.pageSlot {
+  min-width: 0;
+}
+
+.authShell {
+  min-height: 100vh;
+}
+
+/* ── Loading state ────────────────────────────────────────────────────── */
+.loadingWrap {
+  min-height: calc(100vh - 9rem);
+  display: grid;
+  place-items: center;
+  padding: 2rem 0;
+}
+
+.loadingCard {
+  width: min(32rem, 100%);
+  display: grid;
+  gap: 1rem;
+  text-align: left;
+}
+
+.loadingEyebrow {
+  color: #93c5fd;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.loadingCard h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  line-height: 1;
+  color: #f8fafc;
+}
+
+.loadingCard p {
+  margin: 0;
+  color: var(--kb-text-soft);
+  line-height: 1.7;
+}
+
+.loadingBar {
+  width: 100%;
+  height: 0.65rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.8);
+  overflow: hidden;
+}
+
+.loadingBar span {
+  display: block;
+  width: 38%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--kb-gradient-primary);
+  animation: pulseLine 1.35s ease-in-out infinite alternate;
+}
+
+@keyframes pulseLine {
+  from {
+    transform: translateX(-10%);
+    opacity: 0.55;
+  }
+  to {
+    transform: translateX(115%);
+    opacity: 1;
+  }
+}
+
+/* Mobile: full-width, sidebar is managed by AdminSidebarShell's MobileDrawer */
+@media (max-width: 1023px) {
+  .shell {
+    flex-direction: column;
+  }
+
+  .sidebarRail {
+    display: none; /* Hidden on mobile — sidebar uses its fixed MobileDrawer */
+  }
+
+  .workspace {
+    padding: 0 0.85rem 0.85rem;
+  }
+}
+
+
+
+

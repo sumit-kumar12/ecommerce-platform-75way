@@ -1,0 +1,164 @@
+.container {
+  padding: 32px;
+  color: #94a3b8;
+  font-family: 'Inter', sans-serif;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.title {
+  color: #f8fafc;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.addBtn {
+  background: transparent;
+  color: #8C63F5;
+  border: 1px solid #8C63F5;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.addBtn:hover {
+  background: rgba(140, 99, 245, 0.1);
+}
+
+.layout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.rolesList {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.roleCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.roleCard:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.roleCardActive {
+  background: rgba(140, 99, 245, 0.05);
+  border-color: #8C63F5;
+}
+
+.roleCard h3 {
+  color: #f8fafc;
+  font-size: 18px;
+  margin: 0 0 8px 0;
+}
+
+.roleCard p {
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0 0 16px 0;
+}
+
+.userCount {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.permissionsPanel {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.panelHeader h2 {
+  color: #f8fafc;
+  font-size: 20px;
+  margin: 0;
+}
+
+.saveBtn {
+  background: #8C63F5;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.saveBtn:hover {
+  background: #7a52d4;
+}
+
+.permGroup {
+  margin-bottom: 32px;
+}
+
+.permTitle {
+  color: #e2e8f0;
+  font-size: 16px;
+  margin: 0 0 16px 0;
+  font-weight: 600;
+}
+
+.permGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.permCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #94a3b8;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.permCheckbox input[type="checkbox"] {
+  accent-color: #8C63F5;
+  width: 16px;
+  height: 16px;
+}

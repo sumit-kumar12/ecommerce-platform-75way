@@ -1,0 +1,117 @@
+.container {
+  padding: 32px;
+  color: #94a3b8;
+  font-family: 'Inter', sans-serif;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.title {
+  color: #f8fafc;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.exportBtn {
+  background: #8C63F5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.exportBtn:hover {
+  background: #7a52d4;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.statCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.statCard h3 {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 12px 0;
+}
+
+.statValue {
+  color: #f8fafc;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.positive {
+  color: #10b981;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.negative {
+  color: #ef4444;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.chartPanel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.panelTitle {
+  color: #f8fafc;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 32px 0;
+}
+
+.chartPlaceholder {
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.areaChart {
+  flex: 1;
+  background: linear-gradient(180deg, rgba(140, 99, 245, 0.2) 0%, rgba(140, 99, 245, 0) 100%);
+  border-top: 2px solid #8C63F5;
+  clip-path: polygon(0 100%, 0 50%, 20% 30%, 40% 60%, 60% 40%, 80% 80%, 100% 20%, 100% 100%);
+  margin-bottom: 16px;
+}
+
+.xLabels {
+  display: flex;
+  justify-content: space-between;
+  color: #64748b;
+  font-size: 13px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 8px;
+}

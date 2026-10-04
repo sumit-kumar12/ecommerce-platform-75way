@@ -1,0 +1,49 @@
+.shell {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: #0a0910;
+  isolation: isolate;
+}
+
+.grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  background-image: radial-gradient(circle at 2px 2px, rgba(139, 92, 246, 0.12) 1px, transparent 0);
+  background-size: 28px 28px;
+}
+
+.main {
+  position: relative;
+  z-index: 1;
+}
+
+.orbLeft,
+.orbRight {
+  position: fixed;
+  border-radius: 9999px;
+  pointer-events: none;
+  filter: blur(120px);
+  z-index: 0;
+}
+
+.orbLeft {
+  top: -16%;
+  left: -10%;
+  width: 34rem;
+  height: 34rem;
+  background: rgba(79, 70, 229, 0.16);
+}
+
+.orbRight {
+  right: -12%;
+  bottom: -18%;
+  width: 28rem;
+  height: 28rem;
+  background: rgba(37, 99, 235, 0.12);
+}
+
+

@@ -1,0 +1,61 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.iconWrapper {
+  font-size: 80px;
+  margin-bottom: 24px;
+  color: #F02E81;
+}
+
+.animatePulseSlow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-slow { 
+  0%, 100% { opacity: 1; transform: scale(1) } 
+  50% { opacity: 0.7; transform: scale(1.05) } 
+}
+
+.title {
+  color: #f8fafc;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  color: #94a3b8;
+  font-size: 16px;
+  max-width: 400px;
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}
+
+.actionBtn {
+  background: transparent;
+  color: #F02E81;
+  border: 1px solid #F02E81;
+  padding: 12px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.actionBtn:hover {
+  background: rgba(240, 46, 129, 0.1);
+}
+

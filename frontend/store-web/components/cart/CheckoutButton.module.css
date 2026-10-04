@@ -1,0 +1,27 @@
+.checkoutBtn {
+  width: 100%;
+  padding: 1rem;
+  background: #8C63F5;
+  color: #fff;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(140, 99, 245, 0.25);
+}
+
+.checkoutBtn:hover:not(:disabled) {
+  background: #7C3AED;
+  box-shadow: 0 6px 16px rgba(140, 99, 245, 0.35);
+}
+
+.checkoutBtn:disabled {
+  background: rgba(148, 163, 184, 0.2);
+  color: rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+

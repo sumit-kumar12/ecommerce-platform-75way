@@ -1,0 +1,54 @@
+.timeline {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-top: 0.3rem;
+  border-radius: 999px;
+  background: #6b5cff;
+  box-shadow: 0 0 0 6px rgba(107, 92, 255, 0.12);
+}
+
+.body {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.body strong {
+  color: #f8fafc;
+}
+
+.body p,
+.body small,
+.empty p {
+  margin: 0;
+  color: #b8c4d7;
+  line-height: 1.6;
+}
+
+.empty {
+  min-height: 10rem;
+  display: grid;
+  place-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.empty :global(.material-symbols-outlined) {
+  font-size: 2rem;
+}

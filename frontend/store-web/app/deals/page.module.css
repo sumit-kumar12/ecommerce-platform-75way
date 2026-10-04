@@ -1,0 +1,831 @@
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 86rem;
+  margin: 0 auto;
+  padding: 1.35rem 1.75rem 5rem;
+}
+
+.heroPanel {
+  padding: 2.4rem 2.4rem 2rem;
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(circle at top right, rgba(139, 92, 246, 0.25), transparent 40%),
+    radial-gradient(circle at bottom left, rgba(124, 58, 237, 0.15), transparent 35%),
+    linear-gradient(180deg, rgba(31, 31, 40, 0.85), rgba(15, 14, 23, 0.85));
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.errorBanner {
+  margin: 0 0 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(244, 63, 94, 0.28);
+  background: rgba(244, 63, 94, 0.12);
+  color: #fda4af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  text-align: center;
+  font-weight: 700;
+}
+
+.errorBanner :global(.material-symbols-outlined) {
+  font-size: 1.1rem;
+}
+
+.errorBanner button {
+  min-height: 2rem;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(244, 63, 94, 0.34);
+  background: rgba(244, 63, 94, 0.16);
+  color: #fecdd3;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 24rem;
+  gap: 2.2rem;
+  align-items: center;
+}
+
+.heroCopy {
+  max-width: 44rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.8rem;
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.14);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  color: var(--color-primary);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.heroCopy h1 {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 7vw, 4.9rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  color: #f8fafc;
+}
+
+.heroCopy h1 span {
+  background: linear-gradient(90deg, #A78BFA, #a5b4fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.heroCopy p {
+  margin: 0;
+  max-width: 38rem;
+  color: #94a3b8;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+}
+
+.secondaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0 1.15rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(255, 255, 255, 0.03);
+  color: #e2e8f0;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.heroSpotlight {
+  position: relative;
+  min-height: 26rem;
+  padding: 1.4rem;
+  border-radius: 1rem;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(100, 116, 139, 0.25);
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+.spotlightBadge {
+  color: #A78BFA;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.spotlightVisual {
+  height: 16rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.25rem;
+  border-radius: 0.85rem;
+  background:
+    radial-gradient(circle at top, rgba(139, 92, 246, 0.2), transparent 35%),
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.12));
+}
+
+.spotlightVisual :global(.material-symbols-outlined) {
+  font-size: 7rem;
+  color: rgba(165, 180, 252, 0.3);
+}
+
+.spotlightBody {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.spotlightBody strong {
+  display: block;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.spotlightBody p {
+  margin: 0.35rem 0 0;
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+
+.spotlightStatus {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.spotlightStatus span,
+.spotlightStatus em,
+.offerCountdownBadge {
+  min-height: 1.75rem;
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-style: normal;
+}
+
+.spotlightStatus em {
+  background: rgba(139, 92, 246, 0.16);
+  border: 1px solid rgba(139, 92, 246, 0.24);
+  color: #c4b5fd;
+}
+
+.statusTonelive {
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(16, 185, 129, 0.22);
+  color: #34d399;
+}
+
+.statusTonewarn {
+  background: rgba(245, 158, 11, 0.14);
+  border: 1px solid rgba(245, 158, 11, 0.24);
+  color: #fbbf24;
+}
+
+.statusTonedanger {
+  background: rgba(244, 63, 94, 0.16);
+  border: 1px solid rgba(244, 63, 94, 0.28);
+  color: #fb7185;
+}
+
+.statusToneneutral {
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  color: #cbd5e1;
+}
+
+.tickerWrap {
+  margin: 1.4rem 0 2.4rem;
+  padding: 0.85rem 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tickerTrack {
+  display: inline-flex;
+  gap: 2rem;
+  white-space: nowrap;
+  min-width: max-content;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tickerTrack {
+    animation: ticker 40s linear infinite;
+  }
+}
+
+.tickerItem {
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.loadingState,
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 24rem;
+  border-radius: 1rem;
+  background: rgba(31, 31, 40, 0.82);
+  border: 1px solid rgba(100, 116, 139, 0.16);
+  color: #cbd5e1;
+  text-align: center;
+}
+
+.emptyState :global(.material-symbols-outlined) {
+  font-size: 3rem;
+  color: var(--color-primary);
+}
+
+.emptyState h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: #fff;
+}
+
+.emptyState p {
+  margin: 0;
+  max-width: 34rem;
+  color: #94a3b8;
+}
+
+.contentGrid {
+  display: grid;
+  gap: 2rem;
+}
+
+.flashHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.flashEyebrow {
+  color: #A78BFA;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.flashHeader h2 {
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.9rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.countdown {
+  display: flex;
+  gap: 0.85rem;
+}
+
+.countdownCard {
+  min-width: 4.3rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.8rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(100, 116, 139, 0.16);
+  text-align: center;
+}
+
+.countdownCard span {
+  display: block;
+  color: #64748b;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.countdownCard strong {
+  display: block;
+  margin-top: 0.2rem;
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 800;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.35rem;
+}
+
+.offerCard {
+  display: grid;
+  gap: 0;
+  min-height: 22rem;
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(31, 31, 40, 0.98), rgba(15, 14, 23, 0.98));
+  border: 1px solid rgba(100, 116, 139, 0.16);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.offerCard:focus-within,
+.offerCard:focus-visible {
+  outline: 2px solid #A78BFA;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .offerCard:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5), 0 0 15px 0 rgba(167, 139, 250, 0.3);
+    border-color: rgba(167, 139, 250, 0.5);
+    background:
+      linear-gradient(180deg, rgba(40, 39, 53, 0.98), rgba(24, 23, 41, 0.98));
+  }
+}
+
+.offerVisual {
+  position: relative;
+  min-height: 12.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at top, rgba(139, 92, 246, 0.16), transparent 34%),
+    rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.offerTag {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  min-height: 1.55rem;
+  padding: 0 0.55rem;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 0.45rem;
+  background: #8B5CF6;
+  color: #ffffff;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.offerCountdownBadge {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  max-width: calc(100% - 2rem);
+  white-space: nowrap;
+}
+
+.offerVisualIcon {
+  font-size: 5rem;
+  color: rgba(165, 180, 252, 0.3);
+}
+
+.offerBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  flex: 1;
+  padding: 1.4rem 1.35rem 1rem;
+}
+
+.offerBody h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.offerBody p {
+  margin: 0;
+  color: #94a3b8;
+  line-height: 1.7;
+  font-size: 0.88rem;
+}
+
+.offerTimeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.offerTimeGrid div {
+  min-height: 3.25rem;
+  border-radius: 0.7rem;
+  background: rgba(15, 23, 42, 0.58);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.1rem;
+}
+
+.offerTimeGrid span {
+  color: #ffffff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.offerTimeGrid small {
+  color: #64748b;
+  font-size: 0.52rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.offerFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 0 1.35rem 1.35rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.offerMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.85rem;
+  align-items: flex-end;
+}
+
+.offerPrevious {
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-decoration: line-through;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.offerCurrent {
+  color: #7C3AED;
+  font-size: 1.2rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+}
+
+.offerStatus {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: right;
+}
+
+.offerStatus span {
+  color: #94a3b8;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.offerFooterActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.offerCode {
+  color: #64748b;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.offerAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  border-radius: 0.85rem;
+  background: #8B5CF6;
+  box-shadow: 0 12px 24px rgba(139, 92, 246, 0.22);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.intelGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.8fr);
+  gap: 1.35rem;
+}
+
+.kernelCard {
+  min-height: 18rem;
+  padding: 1.7rem;
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(31, 31, 40, 0.98), rgba(15, 14, 23, 0.98));
+  border: 1px solid rgba(100, 116, 139, 0.16);
+}
+
+.kernelCard h3 {
+  margin: 0 0 0.85rem;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.kernelCard p {
+  margin: 0;
+  max-width: 34rem;
+  color: #94a3b8;
+  line-height: 1.75;
+}
+
+.kernelAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  margin-top: 1.5rem;
+  padding: 0 1rem;
+  border-radius: 0.8rem;
+  background: rgba(139, 92, 246, 0.14);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.intelStack {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.intelCard {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.95rem;
+  align-items: flex-start;
+  padding: 1.2rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(100, 116, 139, 0.16);
+}
+
+.intelCard :global(.material-symbols-outlined) {
+  width: 2.4rem;
+  height: 2.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  background: rgba(139, 92, 246, 0.14);
+  color: #a5b4fc;
+}
+
+.intelCard strong {
+  display: block;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.intelCard p {
+  margin: 0.35rem 0 0;
+  color: #94a3b8;
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+
+.connectPanel {
+  padding: 2rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(100, 116, 139, 0.16);
+  text-align: center;
+}
+
+.connectPanel h3 {
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.connectPanel p {
+  margin: 0.65rem auto 1.25rem;
+  max-width: 34rem;
+  color: #94a3b8;
+}
+
+.connectBar {
+  display: inline-flex;
+  align-items: center;
+  min-width: min(100%, 30rem);
+  border-radius: 0.9rem;
+  overflow: hidden;
+  border: 1px solid rgba(100, 116, 139, 0.18);
+  background: rgba(15, 14, 23, 0.7);
+}
+
+.connectBar input {
+  width: 100%;
+  min-height: 3.1rem;
+  padding: 0 1rem;
+  border: 0;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.connectBar button {
+  min-width: 7.2rem;
+  min-height: 3.1rem;
+  border: 0;
+  background: #8B5CF6;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.networkSync {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: rgba(15, 14, 23, 0.85);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+  backdrop-filter: blur(8px);
+  z-index: 50;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.syncDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .syncDot {
+    animation: pulseSync 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes pulseSync {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.networkSync span {
+  color: #10b981;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1280px) {
+  .cardGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1024px) {
+  .heroGrid,
+  .intelGrid,
+  .cardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .flashHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 1rem 1rem 4rem;
+  }
+
+  .heroPanel,
+  .connectPanel,
+  .kernelCard {
+    padding: 1.5rem;
+  }
+
+  .heroCopy h1 {
+    font-size: 2.6rem;
+  }
+
+  .countdown {
+    width: 100%;
+  }
+
+  .countdownCard {
+    flex: 1 1 0;
+  }
+
+  .connectBar {
+    width: 100%;
+    flex-direction: column;
+    border-radius: 1rem;
+  }
+
+  .connectBar button,
+  .connectBar input {
+    width: 100%;
+  }
+
+  .offerMeta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .offerStatus {
+    text-align: left;
+  }
+}
+

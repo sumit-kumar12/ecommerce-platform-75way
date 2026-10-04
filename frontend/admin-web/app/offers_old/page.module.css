@@ -1,0 +1,691 @@
+.container {
+  padding: 1.5rem;
+  background: #0F0E17;
+  min-height: 100vh;
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.topHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.tabNav {
+  display: flex;
+  gap: 1rem;
+}
+
+.tabBtn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.tabBtnActive {
+  color: #8B5CF6;
+}
+
+.tabBtnActive::after {
+  content: '';
+  position: absolute;
+  bottom: -1.6rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #8B5CF6;
+  box-shadow: 0 0 10px #8B5CF6;
+}
+
+.searchBar {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.searchBar input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.75rem;
+  outline: none;
+  width: 180px;
+}
+
+.quickIcons {
+  display: flex;
+  gap: 1rem;
+  color: #64748b;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.builderSection {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.5rem;
+}
+
+.builderPanel {
+  background: #1f1f28;
+  border: none;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.builderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+}
+
+.smallEyebrow {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #8B5CF6;
+  margin-bottom: 0.5rem;
+}
+
+.builderTitle h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.configGrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.inputGroup label, .sliderHeader label, .nodeColumn label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 1rem;
+  letter-spacing: 0.1em;
+}
+
+.obsidianInput {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 1rem;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  border-radius: 4px;
+}
+
+.obsidianInput option {
+  background: #0F0E17;
+  color: #fff;
+}
+
+.dualInputGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.limitGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(0, 242, 255, 0.12);
+  border-radius: 0.9rem;
+  background: rgba(0, 242, 255, 0.035);
+}
+
+.limitNote {
+  grid-column: 1 / -1;
+  margin: 0.2rem 0 0;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.obsidianTextarea {
+  width: 100%;
+  min-height: 6rem;
+  resize: vertical;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 1rem;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  border-radius: 4px;
+  outline: none;
+}
+
+.obsidianTextarea:focus,
+.obsidianInput:focus {
+  border-color: rgba(0, 242, 255, 0.36);
+  box-shadow: 0 0 0 3px rgba(0, 242, 255, 0.08);
+}
+
+.sliderGroup {
+  margin-top: 2rem;
+}
+
+.sliderHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sliderValue {
+  color: #8B5CF6;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.sliderTrack {
+  position: relative;
+  height: 6px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+  margin-top: 1rem;
+}
+
+.sliderTrack input {
+  position: absolute;
+  width: 100%;
+  opacity: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.sliderProgress {
+  position: absolute;
+  height: 100%;
+  background: #8B5CF6;
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+  border-radius: 3px;
+}
+
+.tagCloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.nodeTag {
+  background: rgba(139, 92, 246, 0.1);
+  color: #fff;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.addTagBtn {
+  background: transparent;
+  border: 1px dashed rgba(255,255,255,0.2);
+  color: #64748b;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.forecastEngine {
+  background: rgba(255,255,255,0.02);
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.forecastHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.forecastHeader p {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.projectedLift {
+  color: #10b981;
+  font-weight: 800;
+  font-size: 0.75rem;
+}
+
+.chartArea {
+  height: 80px;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.chartBar {
+  flex: 1;
+  background: rgba(139, 92, 246, 0.2);
+  border-radius: 2px 2px 0 0;
+  transition: height 0.6s ease-out;
+}
+
+.chartBarHighlight {
+  background: #8B5CF6;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+.sidebarStats {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.statCard {
+  background: #1f1f28;
+  padding: 1.5rem;
+}
+
+.statLine {
+  display: flex;
+  justify-content: space-between;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.statLine p {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.statCard h3 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0.5rem 0;
+}
+
+.statProgress {
+  height: 4px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 2px;
+  margin: 1rem 0;
+}
+
+.progressBar {
+  height: 100%;
+  background: #8B5CF6;
+}
+
+.statMeta {
+  color: #10b981;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.nodeListCard {
+  background: #1f1f28;
+  padding: 1.5rem;
+}
+
+.nodeItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.statusDotActive {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.statusDotWarning {
+  width: 8px;
+  height: 8px;
+  background: #f59e0b;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #f59e0b;
+}
+
+.previewCard {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 242, 255, 0.18);
+  background:
+    radial-gradient(circle at top right, rgba(0, 242, 255, 0.18), transparent 38%),
+    linear-gradient(160deg, rgba(139, 92, 246, 0.2), rgba(31, 31, 40, 0.96));
+}
+
+.previewCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+.previewTopline,
+.previewMeta,
+.previewFooter {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.previewTopline span {
+  color: #00f2ff;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.previewTopline strong {
+  color: #0F0E17;
+  background: #00f2ff;
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  box-shadow: 0 0 18px rgba(0, 242, 255, 0.28);
+}
+
+.previewCard h3,
+.previewCard p {
+  position: relative;
+  z-index: 1;
+}
+
+.previewCard h3 {
+  margin: 1.25rem 0 0.6rem;
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.previewCard p {
+  margin: 0 0 1.25rem;
+  color: #cbd5e1;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.previewMeta {
+  padding: 0.75rem;
+  border-radius: 0.8rem;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.previewMeta span {
+  color: #94a3b8;
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.previewMeta em {
+  color: #fff;
+  font-style: normal;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.previewFooter {
+  margin-top: 1rem;
+}
+
+.previewFooter small {
+  color: #00f2ff;
+  font-weight: 800;
+}
+
+.previewFooter button {
+  border: 0;
+  border-radius: 999px;
+  background: #8B5CF6;
+  color: #fff;
+  min-height: 2.25rem;
+  padding: 0 0.9rem;
+  font-weight: 900;
+  cursor: default;
+}
+
+.previewLimits {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.previewLimits span {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  color: #cbd5e1;
+  background: rgba(0, 0, 0, 0.16);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.matrixRoot {
+  margin-top: 3rem;
+}
+
+.sectionHeader {
+  margin-bottom: 2rem;
+}
+
+.offerGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.offerCard {
+  background: #1f1f28;
+  padding: 1.5rem;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.cardGlow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--glow-color);
+  box-shadow: 0 0 10px var(--glow-color);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.categoryBadge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #64748b;
+}
+
+.discountBadge {
+  color: #8B5CF6;
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.offerCard h4 {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cardStats {
+  margin-bottom: 2rem;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.redemptionMeter {
+  margin-top: 1rem;
+  padding: 0.9rem;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 0.8rem;
+  background: rgba(255,255,255,0.025);
+}
+
+.redemptionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.redemptionHeader strong {
+  color: #fff;
+}
+
+.redemptionTrack {
+  height: 0.35rem;
+  margin: 0.7rem 0;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.redemptionFill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8B5CF6, #00f2ff);
+  box-shadow: 0 0 14px rgba(0, 242, 255, 0.26);
+}
+
+.perCustomerText {
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statusPill {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.05);
+}
+
+.statusActive {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.deleteBtn {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.deleteBtn:hover {
+  color: #ef4444;
+}
+
+@media (max-width: 1180px) {
+  .topHeader,
+  .headerActions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .builderSection {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .builderPanel {
+    padding: 1.25rem;
+  }
+
+  .configGrid,
+  .dualInputGrid,
+  .limitGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .tabNav {
+    flex-wrap: wrap;
+  }
+}
+

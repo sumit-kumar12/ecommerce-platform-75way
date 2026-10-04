@@ -1,0 +1,264 @@
+﻿.sessionBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 0.95rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(80, 72, 229, 0.18);
+  background: rgba(80, 72, 229, 0.1);
+  color: #9fb2ff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sessionBadge :global(.material-symbols-outlined) {
+  font-size: 0.95rem;
+}
+
+.inlineLink {
+  color: #9fb2ff;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.inlineLink:hover {
+  color: #c7d2fe;
+}
+
+.heroIcon,
+.heroIconSuccess,
+.heroIconInvalid {
+  width: 5.5rem;
+  height: 5.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.5rem;
+  box-shadow: 0 24px 52px -30px rgba(80, 72, 229, 0.55);
+}
+
+.heroIcon {
+  border: 1px solid rgba(99, 102, 241, 0.24);
+  background: rgba(80, 72, 229, 0.1);
+  color: #a5b4fc;
+}
+
+.heroIconSuccess {
+  border: 1px solid rgba(52, 211, 153, 0.24);
+  background: rgba(16, 185, 129, 0.12);
+  color: #6ee7b7;
+}
+
+.heroIconInvalid {
+  border: 1px solid rgba(248, 113, 113, 0.24);
+  background: rgba(220, 38, 38, 0.12);
+  color: #fca5a5;
+}
+
+.heroIcon :global(.material-symbols-outlined),
+.heroIconSuccess :global(.material-symbols-outlined),
+.heroIconInvalid :global(.material-symbols-outlined) {
+  font-size: 2.5rem;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.loadingPanel,
+.notice,
+.errorBanner {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.loadingPanel {
+  border: 1px solid rgba(99, 102, 241, 0.16);
+  background: rgba(80, 72, 229, 0.08);
+  color: #c7d2fe;
+  font-weight: 600;
+}
+
+.loadingPanel :global(.material-symbols-outlined) {
+  font-size: 1.1rem;
+  animation: spin 1s linear infinite;
+}
+
+.notice {
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  background: rgba(80, 72, 229, 0.08);
+  color: #cbd5e1;
+  font-size: 0.84rem;
+}
+
+.notice p {
+  margin: 0;
+}
+
+.notice :global(.material-symbols-outlined),
+.errorBanner :global(.material-symbols-outlined) {
+  font-size: 1.1rem;
+}
+
+.strengthWrap {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(80, 72, 229, 0.12);
+  background: rgba(80, 72, 229, 0.05);
+}
+
+.strengthHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+}
+
+.strengthTitle {
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.strengthValue {
+  color: #9fb2ff;
+  font-weight: 700;
+}
+
+.strengthTrack {
+  width: 100%;
+  height: 0.45rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: rgba(51, 65, 85, 0.76);
+}
+
+.strengthFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #5048e5 0%, #7c73ff 100%);
+  transition: width 0.2s ease;
+}
+
+.strengthMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #94a3b8;
+  font-size: 0.77rem;
+}
+
+.strengthMeta :global(.material-symbols-outlined) {
+  color: #34d399;
+  font-size: 1rem;
+}
+
+.errorBanner {
+  border: 1px solid rgba(248, 113, 113, 0.24);
+  background: rgba(127, 29, 29, 0.22);
+  color: #fecaca;
+  font-size: 0.88rem;
+}
+
+.submitButton {
+  width: 100%;
+  min-height: 3.45rem;
+  border-radius: 1rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+}
+
+.trustNote {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(80, 72, 229, 0.18);
+  background: rgba(80, 72, 229, 0.08);
+  color: #cbd5e1;
+}
+
+.trustNote :global(.material-symbols-outlined) {
+  color: #9fb2ff;
+  font-size: 1.1rem;
+}
+
+.trustNote strong {
+  display: block;
+  color: #f8fafc;
+}
+
+.trustNote p {
+  margin: 0.2rem 0 0;
+  color: #94a3b8;
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.actions {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.primaryLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 3rem;
+  padding: 0.95rem 1.4rem;
+  border-radius: 9999px;
+  background-image: var(--kb-gradient-primary);
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 18px 40px -22px rgba(37, 99, 235, 0.72);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.primaryLink:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 44px -22px rgba(37, 99, 235, 0.78);
+  filter: brightness(1.04);
+}
+
+.primaryLink :global(.material-symbols-outlined) {
+  font-size: 1.15rem;
+}
+
+.footerCopy {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .sessionBadge {
+    display: none;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

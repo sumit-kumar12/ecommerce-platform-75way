@@ -1,0 +1,481 @@
+.sponsoredContainer {
+  display: flex;
+  background: radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.08) 0%, rgba(15, 23, 42, 0) 90%), #0f172a;
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  border-radius: 20px;
+  padding: 32px;
+  margin: 40px 0;
+  gap: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+.sponsoredContainer::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.12) 0%, rgba(124, 58, 237, 0) 70%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+.carouselWrapper {
+  flex: 1;
+  min-width: 0; /* Prevents flex items from breaking layout */
+  display: flex;
+  flex-direction: column;
+}
+
+.emptyCarousel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.4);
+  border: 2px dashed rgba(168, 85, 247, 0.2);
+  border-radius: 16px;
+  padding: 40px;
+}
+
+.carouselHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.carouselHeader h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  color: #f8fafc;
+}
+
+.headerBadge {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+.adsCarousel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(168, 85, 247, 0.3) rgba(15, 23, 42, 0.1);
+}
+
+.adsCarousel::-webkit-scrollbar {
+  height: 6px;
+}
+
+.adsCarousel::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.1);
+  border-radius: 3px;
+}
+
+.adsCarousel::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.3);
+  border-radius: 3px;
+}
+
+.adsCarousel::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.5);
+}
+
+.adCard {
+  flex: 0 0 240px;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.adCard:hover {
+  transform: translateY(-4px);
+  background: rgba(30, 41, 59, 0.85);
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+.sponsoredBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(4px);
+  color: #cbd5e1;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 3px 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.discountBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.imageWrapper {
+  width: 100%;
+  height: 150px;
+  background: #0f172a;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.adCard:hover .imageWrapper img {
+  transform: scale(1.05);
+}
+
+.cardContent {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.productName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.campaignNameTag {
+  font-size: 11px;
+  color: #a855f7;
+  margin: 0 0 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.dealPrice {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.originalPrice {
+  font-size: 13px;
+  color: #64748b;
+  text-decoration: line-through;
+}
+
+.buyBtn {
+  width: 100%;
+  background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2);
+  transition: all 0.2s;
+  margin-top: auto;
+}
+
+.adCard:hover .buyBtn {
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+}
+
+/* End Card */
+.sponsorCardEnd {
+  background: rgba(15, 23, 42, 0.3);
+  border: 2px dashed rgba(168, 85, 247, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sponsorCardEnd:hover {
+  border-color: rgba(168, 85, 247, 0.5);
+  background: rgba(168, 85, 247, 0.03);
+}
+
+.sponsorEndContent {
+  padding: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.plusCircle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(168, 85, 247, 0.1);
+  color: #c084fc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  transition: all 0.3s;
+}
+
+.sponsorCardEnd:hover .plusCircle {
+  background: #a855f7;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.sponsorCardEnd h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #cbd5e1;
+  margin: 0 0 6px;
+}
+
+.sponsorCardEnd p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 16px;
+}
+
+.sponsorLink {
+  font-size: 12px;
+  font-weight: 700;
+  color: #c084fc;
+}
+
+/* Empty State Card */
+.sponsorNowCard {
+  text-align: center;
+  cursor: pointer;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.plusIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  font-size: 28px;
+  line-height: 56px;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+}
+
+.sponsorNowCard:hover .plusIcon {
+  background: #a855f7;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.sponsorNowCard h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0 0 8px;
+}
+
+.sponsorNowCard p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 20px;
+}
+
+.actionLink {
+  color: #c084fc;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* Right Panel (Benefits) */
+.rightPanel {
+  width: 340px;
+  border-left: 1px solid rgba(168, 85, 247, 0.15);
+  padding-left: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.benefitsBadge {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.panelTitle {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.panelSubtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0 0 24px;
+}
+
+.benefitsList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.benefitsList li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.benefitIcon {
+  font-size: 18px;
+  line-height: 1;
+  padding-top: 2px;
+}
+
+.benefitsList strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 2px;
+}
+
+.benefitsList p {
+  margin: 0;
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.sponsorBtn {
+  background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+}
+
+.sponsorBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.4);
+}
+
+.sponsorBtn span {
+  font-size: 16px;
+}
+
+.skeletonCard {
+  flex: 0 0 240px;
+  height: 290px;
+  background: rgba(30, 41, 59, 0.2);
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+  100% { opacity: 0.6; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .sponsoredContainer {
+    flex-direction: column;
+  }
+  
+  .rightPanel {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid rgba(168, 85, 247, 0.15);
+    padding-left: 0;
+    padding-top: 32px;
+  }
+}
+

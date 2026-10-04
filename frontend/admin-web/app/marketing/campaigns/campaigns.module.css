@@ -1,0 +1,409 @@
+.adminContainer {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: #f8fafc;
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.pageHeader h1 {
+  margin: 0 0 4px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.breadcrumb {
+  margin: 0;
+  font-size: 14px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+}
+
+.createBtn {
+  background: #8B5CF6;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.createBtn:hover {
+  background: #4338ca;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.statCard {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.statLabel {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.statValue {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.statSub {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.increaseColor {
+  color: #10b981;
+}
+
+.contentPanel {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.panelHeader {
+  padding: 20px 24px;
+  border-bottom: 1px solid #334155;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panelHeader h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.refreshBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: #cbd5e1;
+  border: 1px solid #334155;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.refreshBtn:hover {
+  background: #1e293b;
+  color: #fff;
+}
+
+.refreshBtn span {
+  font-size: 16px;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 16px 24px;
+  text-align: left;
+  border-bottom: 1px solid #334155;
+}
+
+.table th {
+  font-size: 12px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.table td {
+  font-size: 14px;
+  color: #f8fafc;
+}
+
+.previewBox {
+  width: 60px;
+  height: 40px;
+  border-radius: 4px;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.previewBox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.campName {
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+
+.campDesc {
+  margin: 0;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.active {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.scheduled {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.inactive {
+  background: rgba(100, 116, 139, 0.1);
+  color: #94a3b8;
+}
+
+.campDates {
+  margin: 0 0 4px;
+}
+
+.campDurationLeft {
+  margin: 0;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.actionBtns {
+  display: flex;
+  gap: 8px;
+}
+
+.editAction, .deleteAction {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editAction {
+  color: #94a3b8;
+}
+.editAction:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.deleteAction {
+  color: #f87171;
+}
+.deleteAction:hover {
+  background: rgba(248, 113, 113, 0.1);
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modalContent {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  width: 600px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.formHeader {
+  padding: 24px;
+  border-bottom: 1px solid #334155;
+  position: relative;
+}
+
+.formHeader h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.formHeader p {
+  margin: 0;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+}
+.closeBtn:hover {
+  color: #fff;
+}
+
+.campaignForm {
+  padding: 24px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.formGroup label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
+.formGroup input, .formGroup select {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #fff;
+  font-size: 14px;
+  color-scheme: dark;
+}
+
+.formGroup input:focus, .formGroup select:focus {
+  outline: none;
+  border-color: #8B5CF6;
+}
+
+.uploadArea {
+  border: 2px dashed #334155;
+  border-radius: 8px;
+  padding: 32px;
+  text-align: center;
+  position: relative;
+  background: rgba(15, 23, 42, 0.5);
+  cursor: pointer;
+}
+.uploadArea:hover {
+  border-color: #8B5CF6;
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.uploadArea input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.uploadArea p {
+  margin: 12px 0 0;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.formActions {
+  margin-top: 32px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.btnOutline {
+  background: transparent;
+  border: 1px solid #475569;
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.btnOutline:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btnPrimary {
+  background: #8B5CF6;
+  border: none;
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.btnPrimary:hover {
+  background: #4338ca;
+}
+

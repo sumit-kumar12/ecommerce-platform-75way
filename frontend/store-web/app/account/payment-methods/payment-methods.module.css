@@ -1,0 +1,196 @@
+.container {
+  padding: 24px;
+  color: #94a3b8;
+  font-family: 'Inter', sans-serif;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pageTitle {
+  color: #f8fafc;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  color: #f8fafc;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.paymentCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.paymentCard:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(140, 99, 245, 0.5);
+}
+
+.defaultCard {
+  border-color: #8C63F5;
+}
+
+.cardInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cardIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  background: #333;
+}
+
+.visa { background: #1a1f71; }
+.mastercard { background: #eb001b; }
+.rupay { background: #f58220; }
+
+.cardName {
+  color: #f8fafc;
+  font-weight: 500;
+  margin: 0;
+}
+
+.cardNumber {
+  color: #94a3b8;
+  margin: 4px 0;
+}
+
+.cardExp {
+  color: #64748b;
+  font-size: 12px;
+  margin: 0;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.defaultBadge {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.menuBtn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.menuBtn:hover {
+  color: #f8fafc;
+}
+
+.walletList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.walletItem {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.walletInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.walletIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #00DAFF;
+  color: #0f0e17;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.paytm {
+  background: #00baf2;
+  color: white;
+}
+
+.walletText {
+  color: #f8fafc;
+  margin: 0;
+}
+
+.editBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.editBtn:hover {
+  opacity: 1;
+}
+
+.addBtn {
+  width: 100%;
+  padding: 16px;
+  background: transparent;
+  border: 1px dashed #8C63F5;
+  color: #8C63F5;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.addBtn:hover {
+  background: rgba(140, 99, 245, 0.1);
+}
+

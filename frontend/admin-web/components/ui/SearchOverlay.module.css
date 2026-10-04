@@ -1,0 +1,176 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(2, 6, 23, 0.72);
+  backdrop-filter: blur(10px);
+}
+
+.panel {
+  width: min(48rem, 100%);
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.header,
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.eyebrow,
+.sectionLabel {
+  color: #93c5fd;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.header h2 {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  line-height: 1;
+  color: #f8fafc;
+}
+
+.closeButton {
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f8fafc;
+}
+
+.searchField {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-height: 3.6rem;
+  padding: 0 1rem;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: 1.25rem;
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.searchField :global(.material-symbols-outlined) {
+  color: #a5b4fc;
+}
+
+.searchField input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  color: #f8fafc;
+  font: inherit;
+  outline: none;
+}
+
+.scopeRow,
+.chipRow,
+.linkGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.scopeButton,
+.scopeActive,
+.chip,
+.linkButton {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  color: #e2e8f0;
+}
+
+.scopeButton,
+.scopeActive {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.3rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.scopeActive {
+  border-color: rgba(167, 139, 250, 0.34);
+  background: rgba(79, 70, 229, 0.18);
+  color: #eef2ff;
+}
+
+.scopeButton :global(.material-symbols-outlined),
+.scopeActive :global(.material-symbols-outlined) {
+  font-size: 0.95rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.section {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.chip {
+  display: inline-grid;
+  gap: 0.2rem;
+  justify-items: start;
+  min-height: 2.6rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 1rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.chip small {
+  color: #94a3b8;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.linkButton {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border-radius: 1rem;
+  text-align: left;
+}
+
+.linkButton strong,
+.linkButton small {
+  display: block;
+}
+
+.linkButton small {
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header,
+  .actions {
+    display: grid;
+  }
+}
+

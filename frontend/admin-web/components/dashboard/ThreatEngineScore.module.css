@@ -1,0 +1,115 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.header {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.meterWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.meterSvg {
+  width: 8rem;
+  height: 8rem;
+  transform: rotate(-90deg);
+}
+
+.bgCircle,
+.fgCircle {
+  fill: transparent;
+  stroke-width: 8;
+}
+
+.bgCircle {
+  stroke: #1e293b;
+}
+
+.fgCircle {
+  stroke: #8B5CF6;
+  stroke-dasharray: 364.4;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1s ease-out;
+}
+
+.meterTextCenter {
+  position: absolute;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.meterValue {
+  font-size: 1.875rem;
+  font-weight: 900;
+  color: #f1f5f9;
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.8);
+}
+
+.meterLabel {
+  font-size: 0.5rem;
+  font-family: monospace;
+  color: #64748b;
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+}
+
+.detailsGrid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.detailCard {
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: rgba(15, 14, 23, 0.5);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.detailLabel {
+  font-size: 0.5625rem;
+  color: #64748b;
+  font-family: monospace;
+}
+
+.detailValue {
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-top: 0.125rem;
+}
+
+.lowRisk {
+  color: #f1f5f9;
+}
+
+.highRisk {
+  color: #ff3e3e;
+}
+

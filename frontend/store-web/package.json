@@ -1,0 +1,26 @@
+{
+  "name": "store-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "test": "next build"
+  },
+  "dependencies": {
+    "lucide-react": "^1.18.0",
+    "material-design-icons-iconfont": "^6.7.0",
+    "next": "^16.2.9",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "shared-ui": "file:../shared-ui",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.0",
+    "autoprefixer": "^10.4.24",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^4.2.0"
+  }
+}

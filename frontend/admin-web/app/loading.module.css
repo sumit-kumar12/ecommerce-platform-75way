@@ -1,0 +1,502 @@
+.shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(139, 92, 246, 0.14), transparent 42%),
+    #0F0E17;
+  color: #f8fafc;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.9rem 2.5rem;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(18px);
+}
+
+.headerLeft,
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brandMark,
+.avatar,
+.sidebarLogo,
+.sidebarIcon,
+.activityIcon,
+.chartAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background: rgba(139, 92, 246, 0.2);
+  color: #8B5CF6;
+}
+
+.brandMark {
+  width: 2rem;
+  height: 2rem;
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.navSkeletons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 1rem;
+}
+
+.navItem,
+.search,
+.lineMedium,
+.lineShort,
+.sidebarText,
+.title,
+.subtitle,
+.metricLabel,
+.metricValue,
+.metricDelta,
+.chartTitle,
+.activityTitle,
+.activityLineLong,
+.activityLineShort,
+.tableTitle,
+.tableHeaderShort,
+.tableHeaderMedium,
+.tableHeaderTiny,
+.tableCellShort,
+.tableCellLong,
+.tableCellTiny,
+.tableChip {
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.08), rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.08));
+  background-size: 220% 100%;
+  animation: shimmer 1.7s ease-in-out infinite;
+}
+
+.navItem {
+  width: 5rem;
+  height: 0.9rem;
+}
+
+.search {
+  width: 16rem;
+  height: 2.5rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  background-color: rgba(139, 92, 246, 0.08);
+}
+
+.avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+}
+
+.body {
+  display: flex;
+  min-height: calc(100vh - 5rem);
+}
+
+.sidebar {
+  width: 16rem;
+  flex: 0 0 16rem;
+  display: none;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1.5rem 1rem;
+  border-right: 1px solid rgba(139, 92, 246, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+}
+
+.sidebarBrand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.sidebarLogo {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+}
+
+.sidebarBrandLines {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.lineMedium {
+  width: 6rem;
+  height: 0.7rem;
+}
+
+.lineShort {
+  width: 4rem;
+  height: 0.5rem;
+  opacity: 0.55;
+}
+
+.sidebarNav {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.sidebarItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: 1rem;
+}
+
+.sidebarItemActive {
+  background: rgba(139, 92, 246, 0.18);
+}
+
+.sidebarIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.35rem;
+}
+
+.sidebarText {
+  width: 5rem;
+  height: 0.75rem;
+}
+
+.main {
+  flex: 1;
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.titleBlock {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.title {
+  width: min(26rem, 75%);
+  height: 2.5rem;
+  border-radius: 0.7rem;
+}
+
+.subtitle {
+  width: min(16rem, 45%);
+  height: 0.9rem;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.metricCard,
+.chartCard,
+.activityCard,
+.tableCard {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(18px);
+}
+
+.metricCard {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.metricGlow {
+  position: absolute;
+  inset: 0;
+  background: rgba(139, 92, 246, 0.06);
+  animation: pulseGlass 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.metricLabel,
+.metricValue,
+.metricDelta,
+.chartTitle,
+.activityTitle,
+.tableTitle,
+.tableHeaderShort,
+.tableHeaderMedium,
+.tableHeaderTiny,
+.tableCellShort,
+.tableCellLong,
+.tableCellTiny,
+.tableChip {
+  position: relative;
+  z-index: 1;
+}
+
+.metricLabel {
+  width: 6rem;
+  height: 0.9rem;
+}
+
+.metricValue {
+  height: 2rem;
+  border-radius: 0.65rem;
+}
+
+.wShort { width: 7rem; }
+.wMedium { width: 8rem; }
+.wTiny { width: 5rem; }
+.wSmall { width: 6rem; }
+
+.metricDelta {
+  width: 4rem;
+  height: 0.9rem;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.14), rgba(16, 185, 129, 0.28), rgba(16, 185, 129, 0.14));
+}
+
+.metricDeltaWarn {
+  background: linear-gradient(90deg, rgba(249, 115, 22, 0.14), rgba(249, 115, 22, 0.28), rgba(249, 115, 22, 0.14));
+}
+
+.analytics {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.chartCard {
+  min-height: 25rem;
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.chartTitle {
+  width: 10rem;
+  height: 1rem;
+}
+
+.chartActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chartAction {
+  width: 2rem;
+  height: 2rem;
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.chartBars {
+  min-height: 18rem;
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  align-items: end;
+  gap: 0.55rem;
+}
+
+.chartBar {
+  border-radius: 0.65rem 0.65rem 0 0;
+  background: linear-gradient(180deg, rgba(139, 92, 246, 0.34), rgba(139, 92, 246, 0.1));
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.bar40 { height: 40%; }
+.bar60 { height: 60%; }
+.bar35 { height: 35%; }
+.bar75 { height: 75%; }
+.bar55 { height: 55%; }
+.bar90 { height: 90%; }
+.bar45 { height: 45%; }
+.bar30 { height: 30%; }
+.bar65 { height: 65%; }
+.bar80 { height: 80%; }
+
+.activityCard {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.activityTitle {
+  width: 8rem;
+  height: 1rem;
+}
+
+.activityList {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.activityItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.activityIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.8rem;
+  background: rgba(139, 92, 246, 0.12);
+}
+
+.activityLines {
+  flex: 1;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.activityLineLong {
+  width: 100%;
+  height: 0.75rem;
+}
+
+.activityLineShort {
+  width: 45%;
+  height: 0.5rem;
+  opacity: 0.55;
+}
+
+.tableCard {
+  overflow: hidden;
+}
+
+.tableHead {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+}
+
+.tableTitle {
+  width: 12rem;
+  height: 1.2rem;
+}
+
+.table {
+  display: grid;
+}
+
+.tableHeaderRow,
+.tableRow {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 0.7fr 0.5fr;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.5rem;
+}
+
+.tableHeaderRow {
+  border-bottom: 1px solid rgba(139, 92, 246, 0.08);
+}
+
+.tableRow + .tableRow {
+  border-top: 1px solid rgba(139, 92, 246, 0.06);
+}
+
+.tableHeaderShort,
+.tableCellShort {
+  width: 6rem;
+  height: 0.8rem;
+}
+
+.tableHeaderMedium {
+  width: 8rem;
+  height: 0.8rem;
+}
+
+.tableHeaderTiny,
+.tableCellTiny {
+  width: 3rem;
+  height: 0.8rem;
+  margin-left: auto;
+}
+
+.tableCellLong {
+  width: 10rem;
+  height: 0.8rem;
+}
+
+.tableChip {
+  width: 4rem;
+  height: 1.4rem;
+  border-radius: 999px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@keyframes pulseGlass {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.25; }
+}
+
+@media (min-width: 1024px) {
+  .sidebar {
+    display: flex;
+  }
+
+  .main {
+    padding: 1.75rem 2.5rem;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .analytics {
+    grid-template-columns: minmax(0, 2fr) minmax(18rem, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .header {
+    padding: 0.85rem 1rem;
+    flex-wrap: wrap;
+  }
+
+  .navSkeletons {
+    display: none;
+  }
+
+  .search {
+    width: 100%;
+    min-width: 12rem;
+  }
+
+  .main {
+    padding: 1rem;
+  }
+
+  .tableHeaderRow,
+  .tableRow {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+

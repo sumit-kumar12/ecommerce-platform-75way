@@ -1,0 +1,60 @@
+export const ROLES = Object.freeze({
+  CUSTOMER: "CUSTOMER",
+  PRODUCT_LISTER: "PRODUCT_LISTER",
+  ADMIN: "ADMIN",
+  SUPER_ADMIN: "SUPER_ADMIN",
+  SECURITY_ADMIN: "SECURITY_ADMIN",
+  COMMERCE_ADMIN: "COMMERCE_ADMIN",
+  SUPPORT_AGENT: "SUPPORT_AGENT",
+  VIEWER: "VIEWER",
+});
+
+export const ADMIN_SURFACE_ROLES = Object.freeze([
+  ROLES.ADMIN,
+  ROLES.SUPER_ADMIN,
+  ROLES.SECURITY_ADMIN,
+  ROLES.COMMERCE_ADMIN,
+  ROLES.SUPPORT_AGENT,
+  ROLES.VIEWER,
+]);
+
+export const FULL_ADMIN_ROLES = Object.freeze([ROLES.ADMIN, ROLES.SUPER_ADMIN, ROLES.SECURITY_ADMIN]);
+
+export const SECURITY_ADMIN_ROLES = Object.freeze([
+  ROLES.ADMIN,
+  ROLES.SUPER_ADMIN,
+  ROLES.SECURITY_ADMIN,
+]);
+
+export const COMMERCE_ADMIN_ROLES = Object.freeze([
+  ROLES.ADMIN,
+  ROLES.SUPER_ADMIN,
+  ROLES.PRODUCT_LISTER,
+  ROLES.COMMERCE_ADMIN,
+]);
+
+export const isAdminSurfaceRole = (role) => ADMIN_SURFACE_ROLES.includes(role);
+export const isFullAdminRole = (role) => FULL_ADMIN_ROLES.includes(role);
+export const isSecurityAdminRole = (role) => SECURITY_ADMIN_ROLES.includes(role);
+export const isCommerceAdminRole = (role) => COMMERCE_ADMIN_ROLES.includes(role);
+
+export const THREAT_POINTS = Object.freeze({
+  FAILED_LOGIN: 1,
+  AUTH_STUFFING_PATTERN: 8,
+  SQL_PATTERN: 5,
+  XSS_PATTERN: 5,
+  RATE_LIMIT_TRIGGER: 3,
+  TOKEN_REUSE: 10,
+  ACCESS_TOKEN_REPLAY: 10,
+  PAYMENT_MISMATCH: 10,
+  RECON_ATTEMPT: 5,
+});
+
+export const ORDER_STATUS = Object.freeze({
+  PENDING_PAYMENT: "PENDING_PAYMENT",
+  PAID: "PAID",
+  PROCESSING: "PROCESSING",
+  SHIPPED: "SHIPPED",
+  DELIVERED: "DELIVERED",
+  CANCELLED: "CANCELLED",
+});
